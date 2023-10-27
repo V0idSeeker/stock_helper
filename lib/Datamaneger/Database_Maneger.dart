@@ -1,7 +1,10 @@
 
 
+import 'dart:ffi';
+
 import 'package:path_provider/path_provider.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
+import 'package:stock_helper/Objects/Client.dart';
 
 import 'package:stock_helper/Objects/Product.dart';
 
@@ -56,14 +59,16 @@ class Database_Maneger{
              
           );
          
-          """);
+          
 
-    /* CREATE TABLE IF NOT EXISTS Client(
-            Client_Id INTEGER PRIMARY KEY,
+     CREATE TABLE IF NOT EXISTS "Client"(
+            Client_Id INTEGER PRIMARY KEY NOT NULL,
             Client_Name TEXT,
             Client_PN INTEGER,
-            Client_Balence INTEGER
+            Client_Balence DOUBLE
           );
+          """);
+          /*
            CREATE TABLE IF NOT EXISTS Supplier(
             Supplier_Id INTEGER PRIMARY KEY,
             Supplier_Name TEXT,
@@ -86,44 +91,78 @@ class Database_Maneger{
             Element_amount INTEGER
             """);*/
   }
-  Future<List<Map>?> Products_Quary(String look_a_like) async {
-    List<Map>? ff;
-    if(look_a_like=="") {
-      ff=await _database?.rawQuery("""
-    Select Product_Name,Category,Count(Product_Name)as amount ,Product_Buying_Price,Product_Selling_Price
-    From Product 
-    Group by Product_Name ; """);
-    } else {
-      ff=await _database?.rawQuery("""
-  Select Product_Name,Category,Count(Product_Name)as amount ,Product_Buying_Price,Product_Selling_Price
-    From Product 
-    where Product_Name Like %${look_a_like}%
-    Group by Product_Name ;""");
-    }
-    return ff;
 
-  }
+ //product functions
   Future<void> AddProduct(Product p) async {
+    await database;
    await _database?.rawInsert("""insert into Product (Product_name,Category,Product_amount,Product_Type,Product_Buying_Price,Product_Selling_Price)
     Values('${p.Product_Name}','${p.Category}','${p.Product_amount}','${p.Product_Type}','${p.Product_Buying_Price}','${p.Product_Selling_Price}');
     """);
    print(" Product saved");
   }
-  Future<List<Product>> Productslist(String filter,String value)async{
-      await database;
-      List<Map<String, Object?>>? result;
-      if(filter=="" ||value =="")
-      result=await _database?.rawQuery('SELECT * from Product ');
-     else  result=await _database?.rawQuery('SELECT * from Product where ${filter} LIKE "%${value}%"');
-    print(result?.length);
-     List<Product> results=[];
-     for(Map<String,Object?> m in result!){
-      results.add(Product.fromMap(m));
+ Future<List<Product>> Productslist(String filter,String value)async{
+   await database;
+   List<Map<String, Object?>>? result;
+   if(filter=="" ||value =="")
+     result=await _database?.rawQuery('SELECT * from Product ');
+   else  result=await _database?.rawQuery('SELECT * from Product where ${filter} LIKE "%${value}%"');
+   List<Product> results=[];
+   for(Map<String,Object?> m in result!){
+     results.add(Product.fromMap(m));
 
-     }
-     return results;
+   }
+   return results;
 
-  }
+ }
+ Future<void> EditProduct(Product p) async {
+   await database;
+   await _database?.rawUpdate("""Update Product Set Product_name= '${p.Product_Name}' ,Category= '${p.Category}' ,Product_amount= '${p.Product_amount}' ,
+     Product_Type= '${p.Product_Type}' ,Product_Buying_Price= '${p.Product_Buying_Price}' ,Product_Selling_Price='${p.Product_Selling_Price}'
+     where Product_Id= '${p.Product_Id}';
+    """);
+   print(" Product saved");
+ }
+ Future<void> DeleteProduct(Product p)async{
+    await database;
+    await _database?.rawDelete("Delete from Product where Product_Id= '${p.Product_Id}' ;");
+
+ }
+
+ //Clients functions
+
+ Future<void> AddClient(Client c) async {
+   await database;
+   await _database?.rawInsert("""insert into Client (Client_Name ,Client_PN,Client_Balence)
+    Values('${c.Client_Name}','${c.Client_PN}','${c.Client_PN}');
+    """);
+   print(" Client saved");
+ }
+ Future<List<Client>> Clientslist(String filter,String value)async{
+   await database;
+   List<Map<String, Object?>>? result;
+   if(filter=="" ||value =="")
+     result=await _database?.rawQuery('SELECT * from Client ');
+   else  result=await _database?.rawQuery('SELECT * from Client where ${filter} LIKE "%${value}%"');
+   List<Client> results=[];
+   for(Map<String,Object?> m in result!){
+     results.add(Client.fromMap(m));
+
+   }
+   return results;
+
+ }
+ Future<void> EditClient(Client c) async {
+   await database;
+   await _database?.rawUpdate("""Update Client Set Client_Name= '${c.Client_Name}' ,Client_PN= '${c.Client_PN}' ,Client_Balence= '${c.Clint_Balence}' 
+     where Client_Id= '${c.Client_Id}';
+    """);
+   print("Client saved");
+ }
+ Future<void> DeleteClient(Client c)async{
+   await database;
+   await _database?.rawDelete("Delete from Client where Client_Id= '${c.Client_Id}' ;");
+
+ }
 
 }
 

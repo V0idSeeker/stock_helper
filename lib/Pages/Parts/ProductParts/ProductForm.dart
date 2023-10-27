@@ -4,7 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:stock_helper/Providers/MyTheme.dart';
-import 'package:stock_helper/Providers/Stock.dart';
+
+import 'package:stock_helper/Providers/StockPageControler.dart';
 
 class ProductForm extends StatelessWidget {
   const ProductForm({Key? key}) : super(key: key);

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+
 import 'package:stock_helper/Pages/ClientsPage.dart';
-import 'package:stock_helper/Pages/Parts/ProductManeger/ProductForm.dart';
 import 'package:stock_helper/Pages/SellingPage.dart';
 import 'package:stock_helper/Pages/StockPage.dart';
 
@@ -20,6 +19,7 @@ class InterfaceControler extends ChangeNotifier {
         main_screan = StockPage();
         break;
     }
+
     notifyListeners();
   }
 }

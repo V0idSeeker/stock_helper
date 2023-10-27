@@ -3,9 +3,8 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:stock_helper/Datamaneger/Database_Maneger.dart';
 import 'package:stock_helper/Objects/Product.dart';
-import 'package:stock_helper/Pages/Parts/ProductManeger/ProductSearchBar.dart';
 import 'package:stock_helper/Providers/MyTheme.dart';
-import 'package:stock_helper/Providers/Stock.dart';
+import 'package:stock_helper/Providers/StockPageControler.dart';
 
 class ProductBrows extends StatelessWidget {
   const ProductBrows({Key? key}) : super(key: key);
@@ -146,6 +145,24 @@ class ProductBrows extends StatelessWidget {
                                     Provider.of<MyTheme>(context).bodyMedium),
                           ),
                         ),
+                        Expanded(
+                          child: Padding(
+                            padding:
+                            EdgeInsetsDirectional.fromSTEB(20, 10, 20, 10),
+                            child: Text('Edit',
+                                style:
+                                Provider.of<MyTheme>(context).bodyMedium),
+                          ),
+                        ),
+                        Expanded(
+                          child: Padding(
+                            padding:
+                            EdgeInsetsDirectional.fromSTEB(20, 10, 20, 10),
+                            child: Text('Delete',
+                                style:
+                                Provider.of<MyTheme>(context).bodyMedium),
+                          ),
+                        ),
                       ],
                     ), //header
                     Expanded(
@@ -179,9 +196,19 @@ class ProductBrows extends StatelessWidget {
                                   Expanded(
                                     child: MaterialButton(
                                       onPressed: () {
-                                        controler.Edit(a);
+                                        controler.SelectToEdit(a);
+
                                       },
-                                      child: Text("edit"),
+                                      child: Text("Edit"),
+                                    ),
+                                  ),
+                                  Expanded(
+                                    child: MaterialButton(
+                                      onPressed: () {
+                                        controler.Delete(a);
+
+                                      },
+                                      child: Text("Delete"),
                                     ),
                                   )
                                 ],
@@ -190,7 +217,7 @@ class ProductBrows extends StatelessWidget {
                       },
                     )),
                   ],
-                ),
+                ), //list+searchbar
                 Form(
                   key: formKey,
                   child: Column(
@@ -215,7 +242,7 @@ class ProductBrows extends StatelessWidget {
                         ),
                         validator: (value) {
                           if (value == null || value.isEmpty)
-                            return "Enter a name";
+                            return "Enter a Category";
                           controler.p.Category = value;
                           return null;
                         },
@@ -253,7 +280,7 @@ class ProductBrows extends StatelessWidget {
                         ),
                         validator: (value) {
                           if (value == null || value.isEmpty)
-                            return "Enter a name";
+                            return "Enter an Amount";
                           controler.p.Product_amount = double.parse(value);
                           return null;
                         },
@@ -270,7 +297,7 @@ class ProductBrows extends StatelessWidget {
                         ),
                         validator: (value) {
                           if (value == null || value.isEmpty)
-                            return "Enter a name";
+                            return "Enter a Buying Price";
                           controler.p.Product_Buying_Price =
                               double.parse(value);
                           return null;
@@ -288,7 +315,7 @@ class ProductBrows extends StatelessWidget {
                         ),
                         validator: (value) {
                           if (value == null || value.isEmpty)
-                            return "Enter a name";
+                            return "Enter a Selling Price";
                           controler.p.Product_Selling_Price =
                               double.parse(value);
                           return null;
@@ -297,15 +324,18 @@ class ProductBrows extends StatelessWidget {
                       ElevatedButton(
                           onPressed: () {
                             if (formKey.currentState!.validate()) {
+                              if(controler.mode=="Add")
                               controler.Add();
+                              else controler.Edit();
+
                             } else
                               print("wrong");
                             return null;
                           },
-                          child: Text("Add"))
+                          child: Text(controler.mode))
                     ],
                   ),
-                )
+                )//add form
               ]);
         });
   }

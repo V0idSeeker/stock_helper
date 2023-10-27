@@ -7,6 +7,7 @@ class StockPageControler extends ChangeNotifier{
   TextEditingController searchBar=TextEditingController();
   String searchType="Name";
   String searchparamm="";
+  String mode="Add";
   Product p=new Product(0, "", "", "count", 0,0, 0);
   Database_Maneger database=Database_Maneger();
 void ChangeSearchType(String s){
@@ -28,14 +29,31 @@ void Searcher(){
 
 Future<void> Add() async {
 
-  Database_Maneger database=Database_Maneger();
+
  await database.AddProduct(p);
+ p=new Product(0, "", "", "count", 0,0, 0);
  notifyListeners();
 }
 
-  void Edit(Product f){
+  Future<void> Edit() async{
+    await database.EditProduct(p);
+    p=new Product(0, "", "", "count", 0,0, 0);
+    mode="Add";
+    notifyListeners();
+
+  }
+
+  void SelectToEdit(Product f){
   p=f;
+  mode="Edit";
   notifyListeners();
+  }
+
+
+
+  Future<void> Delete(Product f)async{
+    await database.DeleteProduct(f);
+    notifyListeners();
   }
 
 

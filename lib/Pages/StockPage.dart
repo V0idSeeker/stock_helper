@@ -5,12 +5,11 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:stock_helper/Datamaneger/Database_Maneger.dart';
-import 'package:stock_helper/Pages/Parts/ProductManeger/ProductBraws.dart';
-import 'package:stock_helper/Pages/Parts/ProductManeger/ProductForm.dart';
-import 'package:stock_helper/Pages/Parts/ProductManeger/ProductSearchBar.dart';
-import 'package:stock_helper/Pages/Parts/ProductManeger/ProductsList.dart';
+import 'package:stock_helper/Pages/Parts/ProductParts/ProductBraws.dart';
+
 import 'package:stock_helper/Providers/MyTheme.dart';
-import 'package:stock_helper/Providers/Stock.dart';
+
+import 'package:stock_helper/Providers/StockPageControler.dart';
 
 
 class StockPage extends StatelessWidget {
@@ -18,7 +17,6 @@ class StockPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Database_Maneger db = Database_Maneger();
 
     return MultiProvider(
         providers: [
@@ -40,7 +38,7 @@ class StockPage extends StatelessWidget {
                 child: Align(
                   alignment: AlignmentDirectional(0.00, 0.00),
                   child: Text(
-                    'Add Product',
+                    'Products',
                     textAlign: TextAlign.center,
                     style: Provider.of<MyTheme>(context).bodyMedium
                   ),

@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:stock_helper/Datamaneger/Database_Maneger.dart';
 import 'package:stock_helper/Objects/Product.dart';
-import 'package:stock_helper/Pages/Parts/ProductManeger/ProductSearchBar.dart';
+import 'package:stock_helper/Pages/Parts/ProductParts/ProductSearchBar.dart';
+import 'package:stock_helper/Providers/ClientPageControler.dart';
 import 'package:stock_helper/Providers/MyTheme.dart';
-import 'package:stock_helper/Providers/Stock.dart';
+import 'package:stock_helper/Providers/StockPageControler.dart';
+
 
 class ProductsList extends StatelessWidget {
   const ProductsList({Key? key}) : super(key: key);
