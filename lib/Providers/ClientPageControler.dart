@@ -10,10 +10,23 @@ class ClientPageControler extends ChangeNotifier {
   Client c=new Client(0,"",00000000,0);
   String mode="Add";
 
+  void Searcher(){
+    if(!searchBar.text.isEmpty)
+      searchparamm=searchBar.text;
+    else searchparamm="";
 
+    notifyListeners();
+  }
+  void ChangeSearchType(String s){
+    searchType=s;
+
+  }
+  Future<List<Client>> clientlist() async {
+    if(searchType=="Name")return await database.Clientslist("Client_Name",searchparamm);
+    if(searchType=="Phone Number")return await database.Clientslist("Client_PN",searchparamm);
+    return await database.Clientslist(searchType, searchparamm);
+  }
   Future<void> Add() async {
-
-
     await database.AddClient(c);
     c=new Client(0,"",00000000,0);
     notifyListeners();

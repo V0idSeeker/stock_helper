@@ -8,6 +8,8 @@ class MainPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (context) => InterfaceControler()),
@@ -25,6 +27,7 @@ class MainPage extends StatelessWidget {
 class MainInterface extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+
     final provider = Provider.of<InterfaceControler>(context);
     return Scaffold(
       appBar: AppBar(
@@ -46,18 +49,18 @@ class MainInterface extends StatelessWidget {
                   },
                 ),
                 ListTile(
+                  title: Icon(Icons.storage),
+                  onTap: () {provider.ChangeMain("Stock");},
+                ),
+                ListTile(
                   title: Icon(Icons.person),
                   onTap: () {
                     provider.ChangeMain("Clients");
                   },
                 ),
                 ListTile(
-                  title: Icon(Icons.storage),
-                  onTap: () {provider.ChangeMain("Stock");},
-                ),
-                ListTile(
                   title: Icon(Icons.fire_truck),
-                  onTap: () {},
+                  onTap: () {provider.ChangeMain("Supplier");},
                 ),
                 ListTile(
                   title: Icon(Icons.history),

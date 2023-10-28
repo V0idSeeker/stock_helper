@@ -85,7 +85,6 @@ class ProductBrows extends StatelessWidget {
                     ),
 
                     Row(
-
                       mainAxisSize: MainAxisSize.max,
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
@@ -172,7 +171,7 @@ class ProductBrows extends StatelessWidget {
                         if (snapshot.connectionState == ConnectionState.waiting)
                           return LinearProgressIndicator();
                         else if (snapshot.hasError)
-                          return Text('Error: ${snapshot.error}');
+                          return Text('Error');
                         else if (snapshot.data == null ||
                             snapshot.data!.isEmpty) return Text(("Empty"));
                         return ListView.builder(
@@ -182,33 +181,34 @@ class ProductBrows extends StatelessWidget {
                               return Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                  Expanded(child: Text(a!.Product_Name)),
-                                  Expanded(child: Text(a.Category)),
-                                  Expanded(child: Text(a.Product_Type)),
+                                  Expanded(child: Padding(  padding: EdgeInsetsDirectional.fromSTEB(20, 10, 20, 10), child: Text(a!.Product_Name))),
+                                  Expanded(child: Padding(  padding: EdgeInsetsDirectional.fromSTEB(20, 10, 20, 10), child:Text(a.Category))),
+                                  Expanded(child: Padding(  padding: EdgeInsetsDirectional.fromSTEB(20, 10, 20, 10), child:Text(a.Product_Type))),
+                                  Expanded(child: Padding(  padding: EdgeInsetsDirectional.fromSTEB(20, 10, 20, 10), child: Text(a.Product_amount.toString()))),
+                                  Expanded(child: Padding(  padding: EdgeInsetsDirectional.fromSTEB(20, 10, 20, 10), child:Text(a.Product_Selling_Price.toString()))),
+                                  Expanded(child: Padding(  padding: EdgeInsetsDirectional.fromSTEB(20, 10, 20, 10), child: Text(a.Product_Buying_Price.toString()))),
                                   Expanded(
-                                      child: Text(a.Product_amount.toString())),
-                                  Expanded(
-                                      child: Text(
-                                          a.Product_Selling_Price.toString())),
-                                  Expanded(
-                                      child: Text(
-                                          a.Product_Buying_Price.toString())),
-                                  Expanded(
-                                    child: MaterialButton(
-                                      onPressed: () {
-                                        controler.SelectToEdit(a);
+                                    child: Padding(
+                                      padding: EdgeInsetsDirectional.fromSTEB(20, 10, 20, 10),
+                                      child: MaterialButton(
+                                        onPressed: () {
+                                          controler.SelectToEdit(a);
 
-                                      },
-                                      child: Text("Edit"),
+                                        },
+                                        child: Center(child: Text("Edit")),
+                                      ),
                                     ),
                                   ),
                                   Expanded(
-                                    child: MaterialButton(
-                                      onPressed: () {
-                                        controler.Delete(a);
+                                    child: Padding(
+                                      padding: EdgeInsetsDirectional.fromSTEB(20, 10, 20, 10),
+                                      child: MaterialButton(
+                                        onPressed: () {
+                                          controler.Delete(a);
 
-                                      },
-                                      child: Text("Delete"),
+                                        },
+                                        child: Center(child: Text("Delete")),
+                                      ),
                                     ),
                                   )
                                 ],

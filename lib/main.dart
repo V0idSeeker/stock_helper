@@ -8,10 +8,15 @@
 
 
 
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:stock_helper/MainPage.dart';
+import 'package:window_manager/window_manager.dart';
 
 void main() {
+
   runApp(const MyApp());
 }
 

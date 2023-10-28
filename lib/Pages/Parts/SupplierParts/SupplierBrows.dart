@@ -1,24 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
-import 'package:stock_helper/Objects/Client.dart';
-import 'package:stock_helper/Providers/ClientPageControler.dart';
+import 'package:stock_helper/Objects/Supplier.dart';
+import 'package:stock_helper/Providers/SupplierPageControler.dart';
 import 'package:stock_helper/Providers/MyTheme.dart';
 
 
-class ClientBrows extends StatelessWidget {
-  const ClientBrows({Key? key}) : super(key: key);
+class SupplierBrows extends StatelessWidget {
+  const SupplierBrows({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
         providers: [
           ChangeNotifierProvider(create: (create) => MyTheme()),
-          ChangeNotifierProvider(create: (create) => ClientPageControler())
+          ChangeNotifierProvider(create: (create) => SupplierPageControler())
         ],
         builder: (context, child) {
 
-          final controler = Provider.of<ClientPageControler>(context);
+          final controler = Provider.of<SupplierPageControler>(context);
           final searchtype = controler.searchType;
           final formKey = GlobalKey<FormState>();
           return GridView(
@@ -75,7 +75,7 @@ class ClientBrows extends StatelessWidget {
                                 ),
                               ],
                               onChanged: (value) {
-                                    controler.ChangeSearchType(value!);
+                                controler.ChangeSearchType(value!);
                               }),
                         ),
 
@@ -137,7 +137,7 @@ class ClientBrows extends StatelessWidget {
                   ),
                   Expanded(
                       child: FutureBuilder(
-                        future: controler.clientlist(),
+                        future: controler.Supplierlist(),
                         builder: (context, snapshot) {
                           if (snapshot.connectionState == ConnectionState.waiting)
                             return LinearProgressIndicator();
@@ -148,13 +148,13 @@ class ClientBrows extends StatelessWidget {
                           return ListView.builder(
                               itemCount: snapshot.data?.length,
                               itemBuilder: (context, index) {
-                                Client? a = snapshot.data?[index];
+                                Supplier? a = snapshot.data?[index];
                                 return Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
-                                    Expanded(child: Padding(  padding: EdgeInsetsDirectional.fromSTEB(20, 10, 20, 10), child: Text(a!.Client_Name))),
-                                    Expanded(child: Padding(  padding: EdgeInsetsDirectional.fromSTEB(20, 10, 20, 10), child:Text(a.Client_PN.toString()))),
-                                    Expanded(child: Padding(  padding: EdgeInsetsDirectional.fromSTEB(20, 10, 20, 10), child:Text(a.Client_Balence.toString()))),
+                                    Expanded(child: Padding(  padding: EdgeInsetsDirectional.fromSTEB(20, 10, 20, 10), child: Text(a!.Supplier_Name))),
+                                    Expanded(child: Padding(  padding: EdgeInsetsDirectional.fromSTEB(20, 10, 20, 10), child:Text(a.Supplier_PN.toString()))),
+                                    Expanded(child: Padding(  padding: EdgeInsetsDirectional.fromSTEB(20, 10, 20, 10), child:Text(a.Supplier_Balence.toString()))),
 
                                     Expanded(
                                       child: Padding(
@@ -189,79 +189,79 @@ class ClientBrows extends StatelessWidget {
                 ],
               ),
               Form(
-              key: formKey,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Expanded(
-                  child: TextFormField(
-                    initialValue: controler.c.Client_Name,
-                    decoration: InputDecoration(
-                      labelText: 'Client Name\n',
-                    ),
-                    validator: (value) {
-                      if (value == null || value.isEmpty)
-                        return "Enter a name";
-                      controler.c.Client_Name = value;
-                      return null;
-                    },
-                  ),
-                ),
-                Expanded(
-                  child: TextFormField(
-                    initialValue: controler.c.Client_PN.toString(),
-                    inputFormatters: <TextInputFormatter>[
-                      FilteringTextInputFormatter.digitsOnly,
+                  key: formKey,
+                  child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Expanded(
+                          child: TextFormField(
+                            initialValue: controler.c.Supplier_Name,
+                            decoration: InputDecoration(
+                              labelText: 'Supplier Name\n',
+                            ),
+                            validator: (value) {
+                              if (value == null || value.isEmpty)
+                                return "Enter a name";
+                              controler.c.Supplier_Name = value;
+                              return null;
+                            },
+                          ),
+                        ),
+                        Expanded(
+                          child: TextFormField(
+                            initialValue: controler.c.Supplier_PN.toString(),
+                            inputFormatters: <TextInputFormatter>[
+                              FilteringTextInputFormatter.digitsOnly,
 
-                    ],
-                    decoration: InputDecoration(
-                      labelText: 'Client Phone Number\n',
-                    ),
-                    validator: (value) {
-                      if (value == null || value.isEmpty || value.length<10)
-                        return "Enter a valid phone Number";
-                      controler.c.Client_PN = int.parse(value);
-                      return null;
-                    },
-                  ),
-                ),
-                Expanded(
-                  child: TextFormField(
-                    initialValue:
-                    controler.c.Client_Balence.toString(),
-                    inputFormatters: <TextInputFormatter>[
-                      FilteringTextInputFormatter.allow(
-                          RegExp(r'^\d+\.?\d{0,2}')),
-                    ],
-                    decoration: InputDecoration(
-                      labelText: 'Balence\n',
-                    ),
-                    validator: (value) {
-                      if (value == null || value.isEmpty)
-                        return "Enter a Balence";
-                      controler.c.Client_Balence =
-                          double.parse(value);
-                      return null;
-                    },
-                  ),
-                ),
-                ElevatedButton(
-                    onPressed: () {
-                      if (formKey.currentState!.validate()) {
-                        if(controler.mode=="Add")
-                          controler.Add();
-                        else controler.Edit();
+                            ],
+                            decoration: InputDecoration(
+                              labelText: 'Supplier Phone Number\n',
+                            ),
+                            validator: (value) {
+                              if (value == null || value.isEmpty || value.length<10)
+                                return "Enter a valid phone Number";
+                              controler.c.Supplier_PN = int.parse(value);
+                              return null;
+                            },
+                          ),
+                        ),
+                        Expanded(
+                          child: TextFormField(
+                            initialValue:
+                            controler.c.Supplier_Balence.toString(),
+                            inputFormatters: <TextInputFormatter>[
+                              FilteringTextInputFormatter.allow(
+                                  RegExp(r'^\d+\.?\d{0,2}')),
+                            ],
+                            decoration: InputDecoration(
+                              labelText: 'Balence\n',
+                            ),
+                            validator: (value) {
+                              if (value == null || value.isEmpty)
+                                return "Enter a Balence";
+                              controler.c.Supplier_Balence =
+                                  double.parse(value);
+                              return null;
+                            },
+                          ),
+                        ),
+                        ElevatedButton(
+                            onPressed: () {
+                              if (formKey.currentState!.validate()) {
+                                if(controler.mode=="Add")
+                                  controler.Add();
+                                else controler.Edit();
 
-                      } else
-                        print("wrong");
-                      return null;
-                    },
-                    child: Text(controler.mode))
+                              } else
+                                print("wrong");
+                              return null;
+                            },
+                            child: Text(controler.mode))
 
 
 
-              ]
-              )
+                      ]
+                  )
               ),
             ],
           );

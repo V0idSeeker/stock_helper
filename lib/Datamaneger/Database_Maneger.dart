@@ -1,12 +1,12 @@
 
 
-import 'dart:ffi';
 
 import 'package:path_provider/path_provider.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 import 'package:stock_helper/Objects/Client.dart';
 
 import 'package:stock_helper/Objects/Product.dart';
+import 'package:stock_helper/Objects/Supplier.dart';
 
 
 class Database_Maneger{
@@ -17,14 +17,12 @@ class Database_Maneger{
   Future<Database?> get database async {
 
 
-    if (_database != null) {
-
-      return _database!;
-    }else {
+    if (_database == null) {
      print("dfdfffffffffff");
       _database = await initDB();
-      return _database!;
+
     }
+    return _database!;
     }
   Future<Database> initDB() async {
 
@@ -67,40 +65,59 @@ class Database_Maneger{
             Client_PN INTEGER,
             Client_Balence DOUBLE
           );
-          """);
-          /*
-           CREATE TABLE IF NOT EXISTS Supplier(
-            Supplier_Id INTEGER PRIMARY KEY,
+          
+          
+           CREATE TABLE IF NOT EXISTS "Supplier"(
+            Supplier_Id INTEGER PRIMARY KEY NOT NULL,
             Supplier_Name TEXT,
             Supplier_PN INTEGER,
-            Supplier_Balence INTEGER 
+            Supplier_Balence DOUBLE
           );
           
          
-              
+         
 
-          CREATE TABLE IF NOT EXISTS Bill(
-            Bill_Id INTEGER PRIMARY KEY,
+          CREATE TABLE IF NOT EXISTS "Bill"(
+            Bill_Id INTEGER PRIMARY KEY NOT NULL,
             Owner_Id INTEGER  ,
             Owner_Type TEXT ,
             Bill_date DATE  
           );
-          CREATE TABLE IF NOT EXISTS Bill_Element(
+          
+          CREATE TABLE IF NOT EXISTS "Bill_Element"(
             Bill_Element_Id INTEGER REFERENCES Product(Product_Id),
             Bill_Id INTEGER REFERENCES Bill(Bill_Id),
-            Element_amount INTEGER
-            """);*/
+            Element_amount DOUBLE
+            );
+            
+            CREATE TABLE IF NOT EXISTS "Settings"(
+            User_Name TEXT,
+            User_Password TEXT,
+            Is_Active BOOL,
+            Remember_User BOOL,
+            End_Trial DATE
+            );
+             
+            
+            """);
+
+            
+
+            await db.rawInsert("""insert into "Settings" 
+            Values ('admin', 'admin', 0, 0, date('now', '+2 months'))
+            """);
   }
 
  //product functions
-  Future<void> AddProduct(Product p) async {
+ Future<void> AddProduct(Product p) async {
     await database;
    await _database?.rawInsert("""insert into Product (Product_name,Category,Product_amount,Product_Type,Product_Buying_Price,Product_Selling_Price)
     Values('${p.Product_Name}','${p.Category}','${p.Product_amount}','${p.Product_Type}','${p.Product_Buying_Price}','${p.Product_Selling_Price}');
     """);
    print(" Product saved");
   }
- Future<List<Product>> Productslist(String filter,String value)async{
+
+  Future<List<Product>> Productslist(String filter,String value)async{
    await database;
    List<Map<String, Object?>>? result;
    if(filter=="" ||value =="")
@@ -114,6 +131,7 @@ class Database_Maneger{
    return results;
 
  }
+
  Future<void> EditProduct(Product p) async {
    await database;
    await _database?.rawUpdate("""Update Product Set Product_name= '${p.Product_Name}' ,Category= '${p.Category}' ,Product_amount= '${p.Product_amount}' ,
@@ -122,6 +140,7 @@ class Database_Maneger{
     """);
    print(" Product saved");
  }
+
  Future<void> DeleteProduct(Product p)async{
     await database;
     await _database?.rawDelete("Delete from Product where Product_Id= '${p.Product_Id}' ;");
@@ -137,6 +156,7 @@ class Database_Maneger{
     """);
    print(" Client saved");
  }
+
  Future<List<Client>> Clientslist(String filter,String value)async{
    await database;
    List<Map<String, Object?>>? result;
@@ -151,16 +171,57 @@ class Database_Maneger{
    return results;
 
  }
+
  Future<void> EditClient(Client c) async {
    await database;
-   await _database?.rawUpdate("""Update Client Set Client_Name= '${c.Client_Name}' ,Client_PN= '${c.Client_PN}' ,Client_Balence= '${c.Clint_Balence}' 
+   await _database?.rawUpdate("""Update Client Set Client_Name= '${c.Client_Name}' ,Client_PN= '${c.Client_PN}' ,Client_Balence= '${c.Client_Balence}' 
      where Client_Id= '${c.Client_Id}';
     """);
    print("Client saved");
  }
+
  Future<void> DeleteClient(Client c)async{
    await database;
    await _database?.rawDelete("Delete from Client where Client_Id= '${c.Client_Id}' ;");
+
+ }
+
+ //Supplier Functions
+
+ Future<void> AddSupplier(Supplier c) async {
+   await database;
+   await _database?.rawInsert("""insert into Supplier (Supplier_Name ,Supplier_PN,Supplier_Balence)
+    Values('${c.Supplier_Name}','${c.Supplier_PN}','${c.Supplier_PN}');
+    """);
+   print(" Supplier saved");
+ }
+
+ Future<List<Supplier>> Supplierslist(String filter,String value)async{
+   await database;
+   List<Map<String, Object?>>? result;
+   if(filter=="" ||value =="")
+     result=await _database?.rawQuery('SELECT * from Supplier ');
+   else  result=await _database?.rawQuery('SELECT * from Supplier where ${filter} LIKE "%${value}%"');
+   List<Supplier> results=[];
+   for(Map<String,Object?> m in result!){
+     results.add(Supplier.fromMap(m));
+
+   }
+   return results;
+
+ }
+
+ Future<void> EditSupplier(Supplier c) async {
+   await database;
+   await _database?.rawUpdate("""Update Supplier Set Supplier_Name= '${c.Supplier_Name}' ,Supplier_PN= '${c.Supplier_PN}' ,Supplier_Balence= '${c.Supplier_Balence}' 
+     where Supplier_Id= '${c.Supplier_Id}';
+    """);
+   print("Supplier saved");
+ }
+
+ Future<void> DeleteSupplier(Supplier c)async{
+   await database;
+   await _database?.rawDelete("Delete from Supplier where Supplier_Id= '${c.Supplier_Id}' ;");
 
  }
 

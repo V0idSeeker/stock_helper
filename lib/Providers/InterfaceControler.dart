@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:stock_helper/Pages/ClientsPage.dart';
 import 'package:stock_helper/Pages/SellingPage.dart';
 import 'package:stock_helper/Pages/StockPage.dart';
+import 'package:stock_helper/Pages/SupplierPage.dart';
 
 class InterfaceControler extends ChangeNotifier {
   Widget main_screan = Selling();
@@ -17,6 +18,9 @@ class InterfaceControler extends ChangeNotifier {
         break;
       case "Stock":
         main_screan = StockPage();
+        break;
+      case "Supplier":
+        main_screan = SupplierPage();
         break;
     }
 

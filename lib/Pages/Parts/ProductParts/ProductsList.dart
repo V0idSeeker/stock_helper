@@ -102,18 +102,20 @@ class ProductsList extends StatelessWidget {
                    else if (snapshot.hasError)  return Text('Error: ${snapshot.error}');
                    else if (snapshot.data==null|| snapshot.data!.isEmpty) return Text(("Empty"));
                    return ListView.builder(
+
                      itemCount: snapshot.data?.length  ,
                        itemBuilder: (context,index){
                        Product? a=snapshot.data?[index];
                        return Row(
+                         mainAxisSize: MainAxisSize.max,
                          mainAxisAlignment: MainAxisAlignment.center,
                          children: [
-                           Expanded(child: Text(a!.Product_Name)),
-                           Expanded(child: Text(a.Category)),
-                           Expanded(child: Text(a.Product_Type)),
-                           Expanded(child: Text(a.Product_amount.toString())),
-                           Expanded(child: Text(a.Product_Selling_Price.toString())),
-                           Expanded(child: Text(a.Product_Buying_Price.toString())),
+                           Padding(  padding: EdgeInsetsDirectional.fromSTEB(20, 10, 20, 10), child: Expanded(child: Text(a!.Product_Name))),
+                           Padding(  padding: EdgeInsetsDirectional.fromSTEB(20, 10, 20, 10), child:Expanded(child: Text(a.Category))),
+                           Padding(  padding: EdgeInsetsDirectional.fromSTEB(20, 10, 20, 10), child:Expanded(child: Text(a.Product_Type))),
+                           Padding(  padding: EdgeInsetsDirectional.fromSTEB(20, 10, 20, 10), child: Expanded(child: Text(a.Product_amount.toString()))),
+                           Padding(  padding: EdgeInsetsDirectional.fromSTEB(20, 10, 20, 10), child:Expanded(child: Text(a.Product_Selling_Price.toString()))),
+                           Padding(  padding: EdgeInsetsDirectional.fromSTEB(20, 10, 20, 10), child: Expanded(child: Text(a.Product_Buying_Price.toString()))),
                          ],
                        );
                        }

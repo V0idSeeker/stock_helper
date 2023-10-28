@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import 'package:stock_helper/Pages/Parts/ClientParts/ClientBrows.dart';
-import 'package:stock_helper/Providers/ClientPageControler.dart';
+import 'package:stock_helper/Pages/Parts/SupplierParts/SupplierBrows.dart';
+import 'package:stock_helper/Providers/SupplierPageControler.dart';
 import 'package:stock_helper/Providers/MyTheme.dart';
 
-class ClientPage extends StatelessWidget {
-  const ClientPage({Key? key}) : super(key: key);
+class SupplierPage extends StatelessWidget {
+  const SupplierPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
 
     return MultiProvider(
         providers: [
-          ChangeNotifierProvider(create: (create)=>ClientPageControler()),
+          ChangeNotifierProvider(create: (create)=>SupplierPageControler()),
           ChangeNotifierProvider(create: (create)=>MyTheme()),
         ],
         builder: (context, child) {
@@ -31,14 +31,14 @@ class ClientPage extends StatelessWidget {
                 child: Align(
                   alignment: AlignmentDirectional(0.00, 0.00),
                   child: Text(
-                      'Clients',
+                      'Suppliers',
                       textAlign: TextAlign.center,
                       style: Provider.of<MyTheme>(context).bodyMedium
                   ),
                 ),
               ),          //Page Heading
               Expanded(
-                child: ClientBrows(),
+                child: SupplierBrows(),
               ),
             ],
           )
