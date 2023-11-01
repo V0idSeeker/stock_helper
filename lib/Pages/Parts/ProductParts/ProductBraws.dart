@@ -9,6 +9,7 @@ import 'package:stock_helper/Providers/StockPageControler.dart';
 class ProductBrows extends StatelessWidget {
   const ProductBrows({Key? key}) : super(key: key);
 
+
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
@@ -71,6 +72,10 @@ class ProductBrows extends StatelessWidget {
                                   DropdownMenuItem(
                                     child: Text("Category"),
                                     value: "Category",
+                                  ),
+                                  DropdownMenuItem(
+                                    child: Text("Supplier"),
+                                    value: "Supplier",
                                   ),
                                 ],
                                 onChanged: (value) {
@@ -235,6 +240,7 @@ class ProductBrows extends StatelessWidget {
                           return null;
                         },
                       ),
+
                       TextFormField(
                         initialValue: controler.p.Category,
                         decoration: InputDecoration(
@@ -247,7 +253,35 @@ class ProductBrows extends StatelessWidget {
                           return null;
                         },
                       ),
+                      FutureBuilder(future: controler.GetSuppliers_Ids(), builder: (context ,snapshot){
+                        List<DropdownMenuItem> manue=[];
+                        manue.add(DropdownMenuItem(
+                          child: Text("No Supplier"),
+                          value: -1,
+                        ));
+                        if (snapshot.connectionState == ConnectionState.waiting)
+                          return CircularProgressIndicator();
+                        else if (snapshot.hasError)
+                          return Text('Error');
+                        else if (!(snapshot.data == null || snapshot.data!.isEmpty)) {
+                          snapshot.data?.forEach((element) {
+                            manue.add(DropdownMenuItem(child: Text(element[1].toString()),value:element[0]));
+                          });
+                        }
+                        return DropdownButtonFormField(
+                          decoration: InputDecoration(
+                            labelText: 'Product Supplier\n',
+                          ),
+                          value: controler.p.Supplier_Id,
+                          items: manue,
+                          onChanged: (value){
+                            controler.p.Supplier_Id=value;
+                          },
+                        );
+
+                      }),
                       DropdownButtonFormField(
+
                           value: controler.p.Product_Type,
                           decoration: InputDecoration(
                             labelText: 'Product Category\n',
@@ -321,18 +355,25 @@ class ProductBrows extends StatelessWidget {
                           return null;
                         },
                       ),
-                      ElevatedButton(
-                          onPressed: () {
-                            if (formKey.currentState!.validate()) {
-                              if(controler.mode=="Add")
-                              controler.Add();
-                              else controler.Edit();
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          ElevatedButton(
+                              onPressed: () {
+                                if (formKey.currentState!.validate()) {
+                                  if(controler.mode=="Add")
+                                  controler.Add();
+                                  else controler.Edit();
 
-                            } else
-                              print("wrong");
-                            return null;
-                          },
-                          child: Text(controler.mode))
+                                } else
+                                  print("wrong");
+                                return null;
+                              },
+                              child: Text(controler.mode)),
+                          controler.refresh(),
+                        ],
+                      ),
+
                     ],
                   ),
                 )//add form

@@ -18,6 +18,7 @@ import 'package:window_manager/window_manager.dart';
 void main() {
 
   runApp(const MyApp());
+  windowManager.setMinimumSize(Size(1920, 1080));
 }
 
 class MyApp extends StatelessWidget {

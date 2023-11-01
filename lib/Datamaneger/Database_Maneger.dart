@@ -46,9 +46,11 @@ class Database_Maneger{
 
   Future<void> _onCreate(Database database, int version) async {
     final db = database;
+
     await db.execute("""  CREATE TABLE IF NOT EXISTS "Product"(
             Product_Id INTEGER PRIMARY KEY NOT NULL  ,
             Product_Name TEXT ,
+            Supplier_Id INTEGER , 
             Category TEXT ,
             Product_amount DOUBLE,
             Product_Type TEXT,
@@ -81,12 +83,15 @@ class Database_Maneger{
             Bill_Id INTEGER PRIMARY KEY NOT NULL,
             Owner_Id INTEGER  ,
             Owner_Type TEXT ,
-            Bill_date DATE  
+            Bill_Total DOUBLE,
+            Bill_date DATE  ,
+            
           );
           
           CREATE TABLE IF NOT EXISTS "Bill_Element"(
             Bill_Element_Id INTEGER REFERENCES Product(Product_Id),
             Bill_Id INTEGER REFERENCES Bill(Bill_Id),
+            Bill_Element_Price DOUBLE,
             Element_amount DOUBLE
             );
             
@@ -101,7 +106,7 @@ class Database_Maneger{
             
             """);
 
-            
+
 
             await db.rawInsert("""insert into "Settings" 
             Values ('admin', 'admin', 0, 0, date('now', '+2 months'))
@@ -111,8 +116,9 @@ class Database_Maneger{
  //product functions
  Future<void> AddProduct(Product p) async {
     await database;
-   await _database?.rawInsert("""insert into Product (Product_name,Category,Product_amount,Product_Type,Product_Buying_Price,Product_Selling_Price)
-    Values('${p.Product_Name}','${p.Category}','${p.Product_amount}','${p.Product_Type}','${p.Product_Buying_Price}','${p.Product_Selling_Price}');
+
+   await _database?.rawInsert("""insert into Product (Product_name,Supplier_Id,Category,Product_amount,Product_Type,Product_Buying_Price,Product_Selling_Price)
+    Values('${p.Product_Name}','${p.Supplier_Id}','${p.Category}','${p.Product_amount}','${p.Product_Type}','${p.Product_Buying_Price}','${p.Product_Selling_Price}');
     """);
    print(" Product saved");
   }
@@ -121,8 +127,8 @@ class Database_Maneger{
    await database;
    List<Map<String, Object?>>? result;
    if(filter=="" ||value =="")
-     result=await _database?.rawQuery('SELECT * from Product ');
-   else  result=await _database?.rawQuery('SELECT * from Product where ${filter} LIKE "%${value}%"');
+     result=await _database?.rawQuery('SELECT * from Product ORDER BY Product_Name');
+   else  result=await _database?.rawQuery('SELECT * from Product where ${filter} LIKE "%${value}%" ORDER BY Product_Name');
    List<Product> results=[];
    for(Map<String,Object?> m in result!){
      results.add(Product.fromMap(m));
@@ -132,9 +138,20 @@ class Database_Maneger{
 
  }
 
+ Future<List> Categories()async{
+    await database;
+    List r=["All Categories"];
+    List<Map<String, Object?>>? result= await _database?.rawQuery('Select DISTINCT Category from Product ORDER BY Category');
+    result?.forEach((element) {
+      r.add(element["Category"].toString());
+    });
+    return r;
+ }
+
+
  Future<void> EditProduct(Product p) async {
    await database;
-   await _database?.rawUpdate("""Update Product Set Product_name= '${p.Product_Name}' ,Category= '${p.Category}' ,Product_amount= '${p.Product_amount}' ,
+   await _database?.rawUpdate("""Update Product Set Product_name= '${p.Product_Name}' ,Supplier_Id='${p.Supplier_Id}',Category= '${p.Category}' ,Product_amount= '${p.Product_amount}' ,
      Product_Type= '${p.Product_Type}' ,Product_Buying_Price= '${p.Product_Buying_Price}' ,Product_Selling_Price='${p.Product_Selling_Price}'
      where Product_Id= '${p.Product_Id}';
     """);
@@ -161,8 +178,8 @@ class Database_Maneger{
    await database;
    List<Map<String, Object?>>? result;
    if(filter=="" ||value =="")
-     result=await _database?.rawQuery('SELECT * from Client ');
-   else  result=await _database?.rawQuery('SELECT * from Client where ${filter} LIKE "%${value}%"');
+     result=await _database?.rawQuery('SELECT * from Client ORDER BY Client_Name');
+   else  result=await _database?.rawQuery('SELECT * from Client where ${filter} LIKE "%${value}%" ORDER BY Client_Name');
    List<Client> results=[];
    for(Map<String,Object?> m in result!){
      results.add(Client.fromMap(m));
@@ -200,8 +217,8 @@ class Database_Maneger{
    await database;
    List<Map<String, Object?>>? result;
    if(filter=="" ||value =="")
-     result=await _database?.rawQuery('SELECT * from Supplier ');
-   else  result=await _database?.rawQuery('SELECT * from Supplier where ${filter} LIKE "%${value}%"');
+     result=await _database?.rawQuery('SELECT * from Supplier ORDER BY Supplier_Name ');
+   else  result=await _database?.rawQuery('SELECT * from Supplier where ${filter} LIKE "%${value}%" ORDER BY Supplier_Name');
    List<Supplier> results=[];
    for(Map<String,Object?> m in result!){
      results.add(Supplier.fromMap(m));
@@ -225,5 +242,11 @@ class Database_Maneger{
 
  }
 
+ Future<List<Map<String, Object?>>?> Suppliers_Ids()async{
+   await _database;
+   List<Map<String, Object?>>? result =await _database?.rawQuery('Select Supplier_Id,Supplier_Name from Supplier ORDER BY Supplier_Name ');
+   return result;
+
+ }
 }
 

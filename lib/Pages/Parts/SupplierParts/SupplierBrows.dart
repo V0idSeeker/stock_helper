@@ -146,6 +146,7 @@ class SupplierBrows extends StatelessWidget {
                           else if (snapshot.data == null ||
                               snapshot.data!.isEmpty) return Text(("Empty"));
                           return ListView.builder(
+                                scrollDirection: Axis.vertical,
                               itemCount: snapshot.data?.length,
                               itemBuilder: (context, index) {
                                 Supplier? a = snapshot.data?[index];
@@ -189,8 +190,10 @@ class SupplierBrows extends StatelessWidget {
                 ],
               ),
               Form(
+
                   key: formKey,
                   child: Column(
+
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Expanded(
