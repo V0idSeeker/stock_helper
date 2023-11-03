@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:stock_helper/Providers/MyTheme.dart';
 import 'package:stock_helper/Providers/SellingPageControler.dart';
@@ -16,6 +17,7 @@ class SellingInterface extends StatelessWidget {
         ],
         builder: (context, child) {
           final controler = Provider.of<SellingPageControler>(context);
+          FocusNode _focusNode = FocusNode();
           return Row(
             children: [
               Expanded(
@@ -49,35 +51,82 @@ class SellingInterface extends StatelessWidget {
                       //browser
                       Expanded(
                           flex: 3,
-                          child:FutureBuilder(future: controler.ProductsList(),builder: (context,snapshot){
-                          if(snapshot.connectionState==ConnectionState.waiting) return CircularProgressIndicator();
-                          if(snapshot.hasError)return Text("Error");
-                          if(snapshot.data==null||snapshot.data!.isEmpty)return Text("There is no products");
-                          final data=snapshot.data!;
-                          return GridView.builder(
-                                itemCount: data.length,
-                                gridDelegate:
-                                SliverGridDelegateWithFixedCrossAxisCount(
+                          child: FutureBuilder(
+                            future: controler.ProductsList(),
+                            builder: (context, snapshot) {
+                              if (snapshot.connectionState ==
+                                  ConnectionState.waiting)
+                                return CircularProgressIndicator();
+                              if (snapshot.hasError) return Text("Error");
+                              if (snapshot.data == null ||
+                                  snapshot.data!.isEmpty)
+                                return Text("There is no products");
+                              final data = snapshot.data!;
+                              return GridView.builder(
+                                  itemCount: data.length,
+                                  gridDelegate:
+                                      SliverGridDelegateWithFixedCrossAxisCount(
                                     crossAxisCount: 5,
-                                  mainAxisSpacing: 20,
-                                  crossAxisSpacing: 10,
-                                ),
-                                itemBuilder: (context, index) {
-                                  return ElevatedButton(
-                                      onPressed: (){},
-                                      child: Text(data[index].Product_Name,));
-                                });
-                          },
-                          )
-                      ),
-
+                                    mainAxisSpacing: 20,
+                                    crossAxisSpacing: 10,
+                                  ),
+                                  itemBuilder: (context, index) {
+                                    return ElevatedButton(
+                                        onPressed: () {
+                                          controler.add_to_bill(data[index]);
+                                        },
+                                        child: Text(
+                                          data[index].Product_Name,
+                                        ));
+                                  });
+                            },
+                          )),
                     ],
                   )),
               Expanded(
-                flex: 2,
-                  child: Row(
-                children: [],
-              ))
+                  flex: 2,
+                  child: Column(
+                    children: [
+                      Expanded(flex: 5,
+                          child: ListView.builder(
+                              itemCount: controler.current_bill.length,
+                              itemBuilder: (context,index){
+
+                                return ListTile(
+
+                                  onTap: (){
+                                    controler.Edeting(index);
+                                    FocusScope.of(context).requestFocus(_focusNode);
+
+                                    } ,
+                                  title: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children:
+                                    [
+                                      Expanded(child: Text(controler.product_names[index].toString())),
+                                      Expanded(child: Text(controler.current_bill[index].Bill_Element_Price.toString())),
+                                      Expanded(child: Text(controler.current_bill[index].Element_amount.toString())),
+                                      Expanded(child: MaterialButton(onPressed:() {controler.Dellete_From_Bill(index);} ,child: Icon(Icons.delete),))
+                                    ],
+                                  ),
+                                );
+
+                          })
+                      ),
+                      Expanded(child: TextField(
+                        textAlign: TextAlign.center,
+                        focusNode: _focusNode,
+                        readOnly: controler.edeting_mode,
+                         controller: controler.edit_controler,
+                        onSubmitted:  (value){controler.EdetAmount();},
+                        inputFormatters: <TextInputFormatter>[
+                          FilteringTextInputFormatter.allow(
+                              RegExp(r'^\d+\.?\d{0,3}')),
+                        ],
+                      )),
+                      Expanded(child: Text("Total :${controler.total}")),
+                    ],
+                  ))
             ],
           );
         });

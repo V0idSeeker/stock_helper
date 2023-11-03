@@ -76,9 +76,8 @@ class MainInterface extends StatelessWidget {
           Expanded(
             flex: 13,
 
-            child: Consumer<InterfaceControler>(builder: (context, notifier, child) {
-              return provider.main_screan;
-            }),
+            child:  provider.main_screan
+
           ),
         ],
       ),

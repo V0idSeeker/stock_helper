@@ -31,6 +31,7 @@ dependencies:
   sqflite_common_ffi:
   window_manager: ^0.2.7
   path_provider: 2.0.14
+  shared_preferences: ^2.2.2
   provider:
   flutter:
     sdk: flutter
@@ -43,6 +44,7 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
+
 
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is

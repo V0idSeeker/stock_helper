@@ -157,7 +157,6 @@ class Database_Maneger{
     """);
    print(" Product saved");
  }
-
  Future<void> DeleteProduct(Product p)async{
     await database;
     await _database?.rawDelete("Delete from Product where Product_Id= '${p.Product_Id}' ;");
@@ -248,5 +247,16 @@ class Database_Maneger{
    return result;
 
  }
+ //Bill stuff
+
+Future<List<Map<String, Object?>>?> GetProductName(int Id) async {
+    await _database;
+    return await _database?.rawQuery("Select Product_Name from Product where Product_Id='${Id}' ");
+
+}
+
+
+
+
 }
 

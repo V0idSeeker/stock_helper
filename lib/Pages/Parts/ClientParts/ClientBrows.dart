@@ -164,7 +164,7 @@ class ClientBrows extends StatelessWidget {
                                             controler.SelectToEdit(a);
 
                                           },
-                                          child: Center(child: Text("Edit")),
+                                          child: Center(child: Icon(Icons.edit)),
                                         ),
                                       ),
                                     ),
@@ -176,7 +176,7 @@ class ClientBrows extends StatelessWidget {
                                             controler.Delete(a);
 
                                           },
-                                          child: Center(child: Text("Delete")),
+                                          child: Center(child: Icon(Icons.delete)),
                                         ),
                                       ),
                                     )

@@ -200,7 +200,7 @@ class ProductBrows extends StatelessWidget {
                                           controler.SelectToEdit(a);
 
                                         },
-                                        child: Center(child: Text("Edit")),
+                                        child: Center(child: Icon(Icons.edit)),
                                       ),
                                     ),
                                   ),
@@ -212,7 +212,7 @@ class ProductBrows extends StatelessWidget {
                                           controler.Delete(a);
 
                                         },
-                                        child: Center(child: Text("Delete")),
+                                        child: Center(child: Icon(Icons.delete)),
                                       ),
                                     ),
                                   )
@@ -307,7 +307,7 @@ class ProductBrows extends StatelessWidget {
                         initialValue: controler.p.Product_amount.toString(),
                         inputFormatters: <TextInputFormatter>[
                           FilteringTextInputFormatter.allow(
-                              RegExp(r'^\d+\.?\d{0,2}')),
+                              RegExp(r'^\d+\.?\d{0,3}')),
                         ],
                         decoration: InputDecoration(
                           labelText: 'Amount\n',
