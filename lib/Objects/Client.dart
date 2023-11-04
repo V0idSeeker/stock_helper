@@ -1,3 +1,4 @@
+import 'package:stock_helper/Datamaneger/Global.dart';
 class Client {
   late int Client_Id;
   late String Client_Name;
@@ -5,15 +6,12 @@ class Client {
   late double Client_Balence;
   Client(int id, String nam, int ph,double b) {
     this.Client_Id = id;
-    this.Client_Name = nam;
+    this.Client_Name = global.Capitalize(nam);
     this.Client_PN = ph;
     this.Client_Balence = b;
   }
 
-  void Update_info(String name, int pn) {
-    this.Client_Name = name;
-    this.Client_PN = pn;
-  }
+
 
   double Get_Balence() {
     return this.Client_Balence;
@@ -26,10 +24,17 @@ class Client {
   }
   Client.fromMap(Map<String, Object?> map){
     this.Client_Id = int.parse(map["Client_Id"].toString());
-    this.Client_Name = map["Client_Name"].toString();
+    this.Client_Name = global.Capitalize(map["Client_Name"].toString());
     this.Client_PN = int.parse(map["Client_PN"].toString());
     this.Client_Balence = double.parse(map["Client_Balence"].toString());
-
+  }
+  Client.formated(Client c)
+  {
+    this.Client_Id = c.Client_Id;
+    this.Client_Name = global.Capitalize(c.Client_Name);
+    this.Client_PN = c.Client_PN;
+    this.Client_Balence = c.Client_Balence;
+  }
   }
 
-}
+

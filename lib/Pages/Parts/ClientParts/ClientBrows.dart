@@ -218,7 +218,7 @@ class ClientBrows extends StatelessWidget {
                       labelText: 'Client Phone Number\n',
                     ),
                     validator: (value) {
-                      if (value == null || value.isEmpty || value.length<10)
+                      if (value == null || value.isEmpty || (value.length<10 &&value.length >1 ))
                         return "Enter a valid phone Number";
                       controler.c.Client_PN = int.parse(value);
                       return null;

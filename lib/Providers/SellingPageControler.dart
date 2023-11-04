@@ -1,6 +1,10 @@
+
+
 import 'package:flutter/cupertino.dart';
 import 'package:stock_helper/Datamaneger/Database_Maneger.dart';
+import 'package:stock_helper/Objects/Bill.dart';
 import 'package:stock_helper/Objects/Bill_Element.dart';
+import 'package:stock_helper/Objects/Client.dart';
 import 'package:stock_helper/Objects/Product.dart';
 
 class SellingPageControler extends ChangeNotifier {
@@ -11,9 +15,8 @@ class SellingPageControler extends ChangeNotifier {
   List<Bill_Element> current_bill=[];
   List<String> product_names=[];
   TextEditingController edit_controler=new TextEditingController();
-
-
   double total=0;
+  Bill bill=new Bill(-1,-1,"Client",0,DateTime.now());
 
 
   void add_to_bill(Product p) {
@@ -56,14 +59,17 @@ class SellingPageControler extends ChangeNotifier {
 
     notifyListeners();
   }
-  void EdetAmount()
-  {current_bill[selectedindex].Element_amount=double.parse(edit_controler.text);
+  void EdetAmount() {
+    current_bill[selectedindex].Element_amount=double.parse(edit_controler.text);
   total=0;
   current_bill.forEach((element) {total=total+(element.Element_amount*element.Bill_Element_Price); });
   notifyListeners();
   }
   Future<List> get_Categories()async{
     return await database.Categories();
+  }
+  Future<List<Client>> get_ClientList()async{
+    return await database.Clientslist("", "");
   }
   Future<List<Product>>ProductsList()async{
     if(searched_Category=="All Categories")

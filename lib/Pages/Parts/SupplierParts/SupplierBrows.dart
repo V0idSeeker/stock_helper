@@ -221,7 +221,7 @@ class SupplierBrows extends StatelessWidget {
                               labelText: 'Supplier Phone Number\n',
                             ),
                             validator: (value) {
-                              if (value == null || value.isEmpty || value.length<10)
+                              if (value == null || value.isEmpty || (value.length<10 &&value.length >1 ))
                                 return "Enter a valid phone Number";
                               controler.c.Supplier_PN = int.parse(value);
                               return null;

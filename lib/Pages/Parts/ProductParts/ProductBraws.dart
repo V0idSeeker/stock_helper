@@ -289,15 +289,15 @@ class ProductBrows extends StatelessWidget {
                           items: [
                             DropdownMenuItem(
                               child: Text("Count"),
-                              value: "count",
+                              value: "Count",
                             ),
                             DropdownMenuItem(
                               child: Text("Weight"),
-                              value: "weight",
+                              value: "Weight",
                             ),
                             DropdownMenuItem(
                               child: Text("Volume"),
-                              value: "volume",
+                              value: "Volume",
                             )
                           ],
                           onChanged: (value) {
