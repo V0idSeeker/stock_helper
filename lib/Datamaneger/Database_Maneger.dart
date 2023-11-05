@@ -263,13 +263,14 @@ Future<List<Map<String, Object?>>?> GetProductName(int Id) async {
 Future<void> AddBill(int owner_id,String owner_type,List<Bill_Element> elements ,bool Payed_Now)async{
     double total_value=0;
     elements.forEach((element) {total_value=total_value+(element.Bill_Element_Price*element.Element_amount); });
-    int? bill_id=await _database?.rawInsert("insert into Bill (Owner_Id,Owner_Type,Bill_Total,Bill_date) Values ('${owner_id}','${owner_type}',${total_value},${DateTime.now()})");
+    int? bill_id=await _database?.rawInsert("insert into 'Bill'(Owner_Id,Owner_Type,Bill_Total,Bill_date) Values ('${owner_id}','${owner_type}',${total_value},'${DateTime.now()}')");
     String inserter="";
     elements.forEach((element) {
      if(inserter.isEmpty)inserter="('${element.Bill_Element_Id}','${bill_id}','${element.Bill_Element_Price}' ,'${element.Element_amount}')";
        else inserter=inserter+" , ('${element.Bill_Element_Id}','${bill_id}','${element.Bill_Element_Price}' ,'${element.Element_amount}')";
     });
-    await _database?.rawInsert("insert into Bill_Element VALUEES ${inserter} ");
+    await _database?.rawInsert("insert into Bill_Element VALUES ${inserter} ");
+    if(!Payed_Now && owner_type=="Client") await _database?.rawUpdate("UPDATE Client SET Client_Balence = Client_Balence - ${total_value} WHERE Client_Id = '${owner_id}' ");
 
 }
 

@@ -89,7 +89,7 @@ class SellingInterface extends StatelessWidget {
                   child: Column(
                     children: [
                       Expanded(
-                          flex: 5,
+                          flex: 9,
                           child: ListView.builder(
                               itemCount: controler.current_bill.length,
                               itemBuilder: (context, index) {
@@ -141,41 +141,72 @@ class SellingInterface extends StatelessWidget {
                               RegExp(r'^\d+\.?\d{0,3}')),
                         ],
                       )),
-                      Expanded(
-                          child: Row(
-                        children: [
+
                           Expanded(
-                              child: FutureBuilder(
-                                  future: controler.get_ClientList(),
-                                  builder: (context, snapshot) {
-                                    if (snapshot.connectionState ==
-                                        ConnectionState.waiting)
-                                      return RefreshProgressIndicator();
-                                    if (snapshot.hasError) return Text("Error");
-                                    List<DropdownMenuItem> items = [
-                                      DropdownMenuItem(
-                                        child: Text("No Client"),
-                                        value: -1,
-                                      )
-                                    ];
-                                    snapshot.data!.forEach((element) {
-                                      items.add(DropdownMenuItem(
-                                        child: Text(element.Client_Name),
-                                        value: element.Client_Id,
-                                      ));
-                                    });
-                                    return DropdownButton(
-                                        value: controler.bill.Owner_Id,
-                                        items: items,
-                                        onChanged: (value) {
-                                          controler.bill.Owner_Id = value;
-                                          controler.notifyListeners();
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Expanded(
+                                  child: FutureBuilder(
+                                      future: controler.get_ClientList(),
+                                      builder: (context, snapshot) {
+                                        if (snapshot.connectionState ==
+                                            ConnectionState.waiting)
+                                          return RefreshProgressIndicator();
+                                        if (snapshot.hasError) return Text("Error");
+                                        List<DropdownMenuItem> items = [
+                                          DropdownMenuItem(
+                                            child: Text("No Client"),
+                                            value: -1,
+                                          )
+                                        ];
+                                        snapshot.data!.forEach((element) {
+                                          items.add(DropdownMenuItem(
+                                            child: Text(element.Client_Name),
+                                            value: element.Client_Id,
+                                          ));
                                         });
-                                  })),
-                          Expanded(child: Text("Total :${controler.total}")),
+                                        return DropdownButton(
+                                            value: controler.bill.Owner_Id,
+                                            items: items,
+                                            onChanged: (value) {
+                                              controler.bill.Owner_Id = value;
+                                              controler.notifyListeners();
+                                            });
+                                      }),
+                                ),
+
+                                Expanded(child: Text("Total :${controler.total}")),
+                              ],
+                            ),
+                          ),
+
+                          Expanded(
+                            child: Row(
+                              children: [
+                                Text("Bill is Payed"),
+                                Checkbox(
+
+                                  value: controler.isPayed,
+                                  onChanged: (bool? value) {
+                                controler.isPayed=value!;
+                                controler.notifyListeners();
+                                  },
+                                ),
+                              ],
+                            ),
+                          ),
+                          Expanded(
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: MaterialButton(
+                            onPressed: controler.Save_Bill,
+                            child: Text("Add Bill"),
+                          ),
+                              ))
                         ],
-                      )),
-                    ],
+
+
                   ))
             ],
           );

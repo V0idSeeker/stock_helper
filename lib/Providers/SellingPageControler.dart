@@ -1,5 +1,7 @@
 
 
+
+
 import 'package:flutter/cupertino.dart';
 import 'package:stock_helper/Datamaneger/Database_Maneger.dart';
 import 'package:stock_helper/Objects/Bill.dart';
@@ -10,7 +12,7 @@ import 'package:stock_helper/Objects/Product.dart';
 class SellingPageControler extends ChangeNotifier {
   Database_Maneger database=new Database_Maneger();
   String searched_Category="All Categories";
-  bool edeting_mode=true;
+  bool edeting_mode=true,isPayed=true;
   int grid_view_width=5 ,selectedindex=-1;
   List<Bill_Element> current_bill=[];
   List<String> product_names=[];
@@ -77,6 +79,16 @@ class SellingPageControler extends ChangeNotifier {
     return await database.Productslist("Category", searched_Category);
   }
 
+  Future<void>Save_Bill()async{
+  await database.AddBill(bill.Owner_Id, "Client", current_bill, isPayed);
+  current_bill=[];
+  product_names=[];
+  total=0;
+  selectedindex=-1;
+  edit_controler.text="";
+  edeting_mode=true;
+  notifyListeners();
 
+  }
 
 }
