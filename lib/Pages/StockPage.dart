@@ -7,9 +7,9 @@ import 'package:provider/provider.dart';
 import 'package:stock_helper/Datamaneger/Database_Maneger.dart';
 import 'package:stock_helper/Pages/Parts/ProductParts/ProductBraws.dart';
 
-import 'package:stock_helper/Providers/MyTheme.dart';
+import 'package:stock_helper/Providers/Global_Controllers/MyTheme.dart';
 
-import 'package:stock_helper/Providers/StockPageControler.dart';
+
 
 
 class StockPage extends StatelessWidget {
@@ -20,7 +20,6 @@ class StockPage extends StatelessWidget {
 
     return MultiProvider(
         providers: [
-          ChangeNotifierProvider(create: (create)=>StockPageControler()),
           ChangeNotifierProvider(create: (create)=>MyTheme()),
         ],
         builder: (context, child) {

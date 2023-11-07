@@ -80,15 +80,17 @@ class SellingPageControler extends ChangeNotifier {
   }
 
   Future<void>Save_Bill()async{
-  await database.AddBill(bill.Owner_Id, "Client", current_bill, isPayed);
-  current_bill=[];
-  product_names=[];
-  total=0;
-  selectedindex=-1;
-  edit_controler.text="";
-  edeting_mode=true;
-  notifyListeners();
-
+    if(current_bill.isNotEmpty) {
+      if(bill.Owner_Id==-1)isPayed=true;
+      await database.AddBill(bill.Owner_Id, "Client", current_bill, isPayed);
+      current_bill = [];
+      product_names = [];
+      total = 0;
+      selectedindex = -1;
+      edit_controler.text = "";
+      edeting_mode = true;
+      notifyListeners();
+    }
   }
 
 }

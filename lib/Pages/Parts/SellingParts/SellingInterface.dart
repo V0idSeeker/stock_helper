@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
-import 'package:stock_helper/Providers/MyTheme.dart';
-import 'package:stock_helper/Providers/SellingPageControler.dart';
+import 'package:stock_helper/Providers/Global_Controllers/MyTheme.dart';
+import 'package:stock_helper/Providers/Pages_Controllers/SellingPageControler.dart';
 
 class SellingInterface extends StatelessWidget {
   const SellingInterface({Key? key}) : super(key: key);
@@ -154,12 +154,7 @@ class SellingInterface extends StatelessWidget {
                                             ConnectionState.waiting)
                                           return RefreshProgressIndicator();
                                         if (snapshot.hasError) return Text("Error");
-                                        List<DropdownMenuItem> items = [
-                                          DropdownMenuItem(
-                                            child: Text("No Client"),
-                                            value: -1,
-                                          )
-                                        ];
+                                        List<DropdownMenuItem> items = [];
                                         snapshot.data!.forEach((element) {
                                           items.add(DropdownMenuItem(
                                             child: Text(element.Client_Name),

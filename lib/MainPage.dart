@@ -1,8 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:stock_helper/Providers/InterfaceControler.dart';
-
+import 'package:stock_helper/Providers/Pages_Controllers/InterfaceControler.dart';
+import 'package:stock_helper/main.dart';
 class MainPage extends StatelessWidget {
   const MainPage({Key? key}) : super(key: key);
 
@@ -64,12 +64,22 @@ class MainInterface extends StatelessWidget {
                 ),
                 ListTile(
                   title: Icon(Icons.history),
-                  onTap: () {},
+                  onTap: () {provider.ChangeMain("History");},
                 ),
                 ListTile(
-                  title: Icon(Icons.query_stats),
-                  onTap: () {},
+                  title: Icon(Icons.settings),
+                  onTap: () {provider.ChangeMain("Settings");},
                 ),
+                ListTile(
+                  title: Icon(Icons.logout),
+                  onTap: (){provider.logout();
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => LogIn()),
+                  );
+                  ;},
+                )
+
               ],
             ),
           ),

@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:stock_helper/Objects/Supplier.dart';
-import 'package:stock_helper/Providers/SupplierPageControler.dart';
-import 'package:stock_helper/Providers/MyTheme.dart';
+import 'package:stock_helper/Providers/Pages_Controllers/SupplierPageControler.dart';
+import 'package:stock_helper/Providers/Global_Controllers//MyTheme.dart';
 
 
 class SupplierBrows extends StatelessWidget {

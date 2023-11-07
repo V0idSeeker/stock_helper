@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:stock_helper/Objects/Client.dart';
-import 'package:stock_helper/Providers/ClientPageControler.dart';
-import 'package:stock_helper/Providers/MyTheme.dart';
+import 'package:stock_helper/Providers/Pages_Controllers/ClientPageControler.dart';
+import 'package:stock_helper/Providers/Global_Controllers/MyTheme.dart';
 
 
 class ClientBrows extends StatelessWidget {
@@ -149,6 +149,7 @@ class ClientBrows extends StatelessWidget {
                               itemCount: snapshot.data?.length,
                               itemBuilder: (context, index) {
                                 Client? a = snapshot.data?[index];
+                                if(a?.Client_Id!=-1)
                                 return Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [

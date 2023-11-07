@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
-import 'package:stock_helper/Datamaneger/Database_Maneger.dart';
 import 'package:stock_helper/Objects/Product.dart';
-import 'package:stock_helper/Providers/MyTheme.dart';
-import 'package:stock_helper/Providers/StockPageControler.dart';
+import 'package:stock_helper/Providers/Global_Controllers/MyTheme.dart';
+import 'package:stock_helper/Providers/Pages_Controllers/StockPageControler.dart';
 
 class ProductBrows extends StatelessWidget {
   const ProductBrows({Key? key}) : super(key: key);

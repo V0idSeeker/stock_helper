@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:stock_helper/Pages/Parts/SellingParts/SellingInterface.dart';
-import 'package:stock_helper/Providers/MyTheme.dart';
+import 'package:stock_helper/Providers/Global_Controllers/MyTheme.dart';
 
 class Selling extends StatelessWidget {
   const Selling({Key? key}) : super(key: key);

@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'package:stock_helper/Pages/Parts/SupplierParts/SupplierBrows.dart';
-import 'package:stock_helper/Providers/SupplierPageControler.dart';
-import 'package:stock_helper/Providers/MyTheme.dart';
+import 'package:stock_helper/Providers/Global_Controllers/MyTheme.dart';
 
 class SupplierPage extends StatelessWidget {
   const SupplierPage({Key? key}) : super(key: key);
@@ -13,7 +12,6 @@ class SupplierPage extends StatelessWidget {
 
     return MultiProvider(
         providers: [
-          ChangeNotifierProvider(create: (create)=>SupplierPageControler()),
           ChangeNotifierProvider(create: (create)=>MyTheme()),
         ],
         builder: (context, child) {

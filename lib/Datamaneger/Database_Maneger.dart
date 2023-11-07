@@ -1,6 +1,8 @@
 
 
 
+import 'dart:math';
+
 import 'package:path_provider/path_provider.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 import 'package:stock_helper/Objects/Bill_Element.dart';
@@ -8,6 +10,7 @@ import 'package:stock_helper/Objects/Client.dart';
 
 import 'package:stock_helper/Objects/Product.dart';
 import 'package:stock_helper/Objects/Supplier.dart';
+
 
 
 class Database_Maneger{
@@ -100,16 +103,20 @@ class Database_Maneger{
             User_Password TEXT,
             Is_Active BOOL,
             Remember_User BOOL,
-            End_Trial DATE
+            End_Trial DATE,
+            App_Id TEXT ,
+            Global_Key TEXT
             );
              
             
             """);
-
-
+          int timestamp = DateTime.now().millisecondsSinceEpoch;
+          int random = Random().nextInt(999999); // Adjust the range as needed
+           String uniqueId = '$timestamp$random';
+            await db.rawInsert("insert into 'Client' (Client_Id,Client_Name,Client_PN,Client_Balence)values(-1,'No Client',0,0)");
 
             await db.rawInsert("""insert into "Settings" 
-            Values ('admin', 'admin', 0, 0, date('now', '+2 months'))
+            Values ('admin', 'admin', 0, 0, date('now', '+2 months'),'${uniqueId}','52 7A 43 68 35 2B 41 6E 2B 48 69 4A 61 33 32 30 32 30')
             """);
   }
 
@@ -140,6 +147,7 @@ class Database_Maneger{
 
  Future<List> Categories()async{
     await database;
+
     List r=["All Categories"];
     List<Map<String, Object?>>? result= await _database?.rawQuery('Select DISTINCT Category from Product ORDER BY Category');
     result?.forEach((element) {
@@ -282,17 +290,17 @@ Future<List<Map<String, Object?>>?> GetBill(String Owner,String type) async{
   if(Owner=="") {
     if (type == "Client")
       return await _database?.rawQuery(
-          "Select Client_Name, Bill_Total, Bill_date from Client,Bill where Client_Id=Owner_Id && Owner_Type='Client' order by Client_Name ");
+          "Select Bill_Id,Client_Name, Bill_Total, Bill_date from Client,Bill where Client_Id=Owner_Id and Owner_Type='Client' order by Client_Name ");
     else
       return await _database?.rawQuery(
-          "Select Supplier_Name, Bill_Total, Bill_date from Client,Bill where Client_Id=Owner_Id && Owner_Type='Supplier' order by Supplier_Name ");
+          "Select Bill_Id,Supplier_Name, Bill_Total, Bill_date from Client,Bill where Client_Id=Owner_Id and Owner_Type='Supplier' order by Supplier_Name ");
   }else{
     if (type == "Client")
       return await _database?.rawQuery(
-          "Select Client_Name, Bill_Total, Bill_date from Client,Bill where Client_Id=Owner_Id && Owner_Type='Client' && Client_Name Like '%${Owner}%' order by Client_Name ");
+          "Select Bill_Id,Client_Name, Bill_Total, Bill_date from Client,Bill where Client_Id=Owner_Id and Owner_Type='Client' and Client_Name Like '%${Owner}%' order by Client_Name ");
     else
       return await _database?.rawQuery(
-          "Select Supplier_Name, Bill_Total, Bill_date from Client,Bill where Client_Id=Owner_Id && Owner_Type='Supplier' && Suppler_Name Like '%${Owner}%' order by Supplier_Name ");
+          "Select Bill_Id,Supplier_Name, Bill_Total, Bill_date from Client,Bill where Client_Id=Owner_Id and Owner_Type='Supplier' and Suppler_Name Like '%${Owner}%' order by Supplier_Name ");
 
   }
 
@@ -300,7 +308,34 @@ Future<List<Map<String, Object?>>?> GetBill(String Owner,String type) async{
 
 
 }
+Future<void>DeleteBill(String id)async{
+    await _database;
+    await _database?.rawDelete("Delete from Bill_Element where Bill_Id= '${id}' ");
+    await _database?.rawDelete("Delete from Bill where Bill_Id= '${id}' ");
+}
+Future<List<Map<String,Object?>>?>GetBillElements(String Bill_Id)async{
+    await _database;
+    return _database!.rawQuery("Select  Bill_Element_Price , Product_Name, Element_amount from Product,Bill_Element where Bill_Id='${Bill_Id}' and Bill_Element_Id=Product_Id ");
 
 
+}
+
+Future<Map<String,Object?>?>? GetSettingsParams()async{
+    await database;
+    List<Map<String, Object?>>? f=await _database?.rawQuery("SELECT * FROM Settings ");
+    print(f.toString());
+    return f?.first;
+}
+
+Future<void> UpdateSettings(String username,String password , bool Loginstatus)async{
+    await database;
+if(username!="") await _database?.rawUpdate("Update Settings set User_Name='${username}' ");
+if(password!="") await _database?.rawUpdate("Update Settings set  User_Password='${password}' ");
+if(Loginstatus!="") await _database?.rawUpdate("Update Settings set Remember_User='${Loginstatus}' ");
+
+}
+Future<void> Activate(String code)async{
+
+}
 }
 
