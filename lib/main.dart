@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:stock_helper/MainPage.dart';
+import 'package:stock_helper/Pages/Parts/Activation/Activator.dart';
+import 'package:stock_helper/Pages/Parts/Activation/Counter.dart';
 import 'package:stock_helper/Providers/Global_Controllers/MyTheme.dart';
 import 'package:stock_helper/Providers/SettingsController.dart';
 import 'package:window_manager/window_manager.dart';
@@ -36,7 +38,7 @@ class LogIn extends StatelessWidget {
       builder: (context, child) {
         final theme = Provider.of<MyTheme>(context);
         final controler = Provider.of<SettingsController>(context);
-        controler.getdata();
+
         final formKey = GlobalKey<FormState>();
         return MaterialApp(
           home: FutureBuilder(
@@ -44,8 +46,8 @@ class LogIn extends StatelessWidget {
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting)
                   return Container(color:Colors.white ,child: Center(child:CircularProgressIndicator()),);
-                if (snapshot.hasError) return Container(color:Colors.white ,child: Center(child:Text("Error")),);
-                if (snapshot.data != null && snapshot.data == true)
+                if (snapshot.hasError) return Container(color:Colors.white ,child: Center(child:Text(snapshot.error.toString())),);
+                if (snapshot.data != null && snapshot.data == true && controler.number_of_days>0)
                   return MainPage();
                 else
                   return Scaffold(
@@ -103,7 +105,7 @@ class LogIn extends StatelessWidget {
                                   ),
                                   MaterialButton(
                                     onPressed: () {
-                                      if (formKey.currentState!.validate()) {
+                                      if (formKey.currentState!.validate() && controler.number_of_days > 0 || controler.is_active) {
                                         controler.changeloginstats(true);
                                         Navigator.push(
                                           context,
@@ -115,6 +117,9 @@ class LogIn extends StatelessWidget {
                                     },
                                     child: Text("go"),
                                   ),
+                                  Exp_Counter(),
+                                  if(controler.number_of_days<0) Activator_input()
+
                                 ],
                               ),
                             ),

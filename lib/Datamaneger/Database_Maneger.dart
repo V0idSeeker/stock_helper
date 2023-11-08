@@ -105,18 +105,19 @@ class Database_Maneger{
             Remember_User BOOL,
             End_Trial DATE,
             App_Id TEXT ,
-            Global_Key TEXT
+            Global_Key TEXT,
+            Private_Key TEXT
             );
              
             
             """);
-          int timestamp = DateTime.now().millisecondsSinceEpoch;
-          int random = Random().nextInt(999999); // Adjust the range as needed
-           String uniqueId = '$timestamp$random';
+          // Adjust the range as needed
+          String uniqueId = '${DateTime.now().millisecondsSinceEpoch}${Random().nextInt(999999)}';
+          String privatekey = '${DateTime.now().millisecondsSinceEpoch}${Random().nextInt(999999)}';
             await db.rawInsert("insert into 'Client' (Client_Id,Client_Name,Client_PN,Client_Balence)values(-1,'No Client',0,0)");
 
             await db.rawInsert("""insert into "Settings" 
-            Values ('admin', 'admin', 0, 0, date('now', '+2 months'),'${uniqueId}','52 7A 43 68 35 2B 41 6E 2B 48 69 4A 61 33 32 30 32 30')
+            Values ('admin', 'admin', 0, 0, date('now', '+2 months'),'${uniqueId}','52 7A 43 68 35 2B 41 6E 2B 48 69 4A 61 33 32 30 32 30','${privatekey}')
             """);
   }
 
@@ -334,8 +335,12 @@ if(password!="") await _database?.rawUpdate("Update Settings set  User_Password=
 if(Loginstatus!="") await _database?.rawUpdate("Update Settings set Remember_User='${Loginstatus}' ");
 
 }
-Future<void> Activate(String code)async{
-
+Future<bool> Activate(String code)async{
+    await _database;
+    Map<String, Object?> result =(await _database?.rawQuery("Select Global_Key , Private_Key from Settings "))!.first;
+    if(result["Private_Key"].toString() !=code && result["Global_Key"].toString() !=code) return false;
+    await _database?.rawUpdate("Update Settings set Is_Active ='true' ");
+    return true;
 }
 }
 
