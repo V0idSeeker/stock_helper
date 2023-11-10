@@ -167,6 +167,12 @@ class Database_Maneger{
     """);
    print(" Product saved");
  }
+ Future<Map<String,Object ?>?> Product_Avilability(int id)async{
+    await database;
+    List<Map<String, Object?>>? f= await _database?.rawQuery("Select Product_Name,Product_amount from Product where Product_Id='${id}'");
+
+    return f?.first;
+ }
  Future<void> DeleteProduct(Product p)async{
     await database;
     await _database?.rawDelete("Delete from Product where Product_Id= '${p.Product_Id}' ;");
@@ -274,9 +280,11 @@ Future<void> AddBill(int owner_id,String owner_type,List<Bill_Element> elements 
     elements.forEach((element) {total_value=total_value+(element.Bill_Element_Price*element.Element_amount); });
     int? bill_id=await _database?.rawInsert("insert into 'Bill'(Owner_Id,Owner_Type,Bill_Total,Bill_date) Values ('${owner_id}','${owner_type}',${total_value},'${DateTime.now()}')");
     String inserter="";
-    elements.forEach((element) {
+    elements.forEach((element)async {
      if(inserter.isEmpty)inserter="('${element.Bill_Element_Id}','${bill_id}','${element.Bill_Element_Price}' ,'${element.Element_amount}')";
        else inserter=inserter+" , ('${element.Bill_Element_Id}','${bill_id}','${element.Bill_Element_Price}' ,'${element.Element_amount}')";
+      await _database?.rawUpdate("update Product set Product_amount = Product_amount-'${element.Element_amount}' where Product_Id='${element.Bill_Element_Id}'");
+
     });
     await _database?.rawInsert("insert into Bill_Element VALUES ${inserter} ");
     if(!Payed_Now && owner_type=="Client") await _database?.rawUpdate("UPDATE Client SET Client_Balence = Client_Balence - ${total_value} WHERE Client_Id = '${owner_id}' ");
@@ -287,24 +295,24 @@ Future<void> AddBill(int owner_id,String owner_type,List<Bill_Element> elements 
 
 Future<List<Map<String, Object?>>?> GetBill(String Owner,String type) async{
   await _database;
-
+  List<Map<String, Object?>>?x ;
   if(Owner=="") {
     if (type == "Client")
-      return await _database?.rawQuery(
-          "Select Bill_Id,Client_Name, Bill_Total, Bill_date from Client,Bill where Client_Id=Owner_Id and Owner_Type='Client' order by Client_Name ");
+      x= await _database?.rawQuery(
+          "Select Bill_Id,Client_Name, Bill_Total, Bill_date from Client,Bill where Client_Id=Owner_Id and Owner_Type='Client' order by Bill_date  ");
     else
-      return await _database?.rawQuery(
-          "Select Bill_Id,Supplier_Name, Bill_Total, Bill_date from Client,Bill where Client_Id=Owner_Id and Owner_Type='Supplier' order by Supplier_Name ");
+      x= await _database?.rawQuery(
+          "Select Bill_Id,Supplier_Name, Bill_Total, Bill_date from Client,Bill where Client_Id=Owner_Id and Owner_Type='Supplier' order by Bill_date ");
   }else{
     if (type == "Client")
-      return await _database?.rawQuery(
-          "Select Bill_Id,Client_Name, Bill_Total, Bill_date from Client,Bill where Client_Id=Owner_Id and Owner_Type='Client' and Client_Name Like '%${Owner}%' order by Client_Name ");
+      x= await _database?.rawQuery(
+          "Select Bill_Id,Client_Name, Bill_Total, Bill_date from Client,Bill where Client_Id=Owner_Id and Owner_Type='Client' and Client_Name Like '%${Owner}%' order by Bill_date ");
     else
-      return await _database?.rawQuery(
-          "Select Bill_Id,Supplier_Name, Bill_Total, Bill_date from Client,Bill where Client_Id=Owner_Id and Owner_Type='Supplier' and Suppler_Name Like '%${Owner}%' order by Supplier_Name ");
+      x= await _database?.rawQuery(
+          "Select Bill_Id,Supplier_Name, Bill_Total, Bill_date from Client,Bill where Client_Id=Owner_Id and Owner_Type='Supplier' and Suppler_Name Like '%${Owner}%' order by Bill_date ");
 
   }
-
+ return List.from(x!.reversed);
 
 
 

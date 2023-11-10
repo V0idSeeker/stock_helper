@@ -2,6 +2,8 @@
 
 
 
+import 'dart:async';
+
 import 'package:flutter/cupertino.dart';
 import 'package:stock_helper/Datamaneger/Database_Maneger.dart';
 import 'package:stock_helper/Objects/Bill.dart';
@@ -19,6 +21,7 @@ class SellingPageControler extends ChangeNotifier {
   TextEditingController edit_controler=new TextEditingController();
   double total=0;
   Bill bill=new Bill(-1,-1,"Client",0,DateTime.now());
+  Widget f=Container();
 
 
   void add_to_bill(Product p) {
@@ -78,6 +81,29 @@ class SellingPageControler extends ChangeNotifier {
     return await database.Productslist("", "");
     return await database.Productslist("Category", searched_Category);
   }
+  Future<String?> product_avilability() async{
+    String? x =null;
+
+      for(int i=0 ;i<current_bill.length;i++){
+
+      Map<String, Object?>? f=await database.Product_Avilability(current_bill[i].Bill_Element_Id);
+      if(double.parse(f!["Product_amount"].toString())<current_bill[i].Element_amount) x=f["Product_Name"].toString() ;
+
+
+    }
+     return x;
+
+  }
+  void Error(String r){
+    f=Expanded(child: Text("Amount of ${r} is insuffisiant "));
+    notifyListeners();
+    Timer(Duration(seconds: 2), () {
+      f=Container();
+      notifyListeners();
+    });
+  }
+
+
 
   Future<void>Save_Bill()async{
     if(current_bill.isNotEmpty) {

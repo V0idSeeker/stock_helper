@@ -18,6 +18,7 @@ class SellingInterface extends StatelessWidget {
           final controler = Provider.of<SellingPageControler>(context);
           final theme= Provider.of<MyTheme>(context);
           FocusNode _focusNode = FocusNode();
+
           return Row(
             children: [
               Expanded(
@@ -199,10 +200,19 @@ class SellingInterface extends StatelessWidget {
                               child: Padding(
                                 padding: const EdgeInsets.all(8.0),
                                 child: MaterialButton(
-                            onPressed: controler.Save_Bill,
+                            onPressed: ()async {
+                              String ?r = await controler.product_avilability();
+
+                              if (r == null)
+                                controler.Save_Bill();
+                              else {
+                                controler.Error(r);
+                              }
+                            },
                             child: Text("Add Bill"),
                           ),
-                              ))
+                              )),
+                          controler.f,
                         ],
 
 
