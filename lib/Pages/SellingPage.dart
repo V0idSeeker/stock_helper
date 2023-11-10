@@ -24,7 +24,7 @@ class Selling extends StatelessWidget {
                 width: double.infinity,
                 height: 65,
                 decoration: BoxDecoration(
-                  color: Provider.of<MyTheme>(context).secondaryBackground,
+                  color: Provider.of<MyTheme>(context).alternate,
                 ),
                 child: Row(
                   children: [
@@ -35,7 +35,7 @@ class Selling extends StatelessWidget {
                         child: Text(
                             'Basket',
                             textAlign: TextAlign.center,
-                            style: Provider.of<MyTheme>(context).bodyMedium
+                            style: Provider.of<MyTheme>(context).Headliers
                         ),
                       ),
                     ),

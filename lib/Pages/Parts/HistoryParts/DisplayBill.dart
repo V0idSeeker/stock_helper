@@ -9,7 +9,7 @@ class DisplayBill extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-   if(Bill_Id=="") return Container(color: Colors.red,);
+   if(Bill_Id=="") return Container(child: Center(child: Text("Empty"),),);
    else return MultiProvider(
      providers: [
        ChangeNotifierProvider(create: (create)=>MyTheme()),
@@ -54,7 +54,7 @@ class DisplayBill extends StatelessWidget {
              }),
            ),
            Expanded(child: Text( "Total : "+bill_total,style: TextStyle(fontSize: 18),textAlign: TextAlign.center,)),
-           Expanded(child: Center(child: MaterialButton(onPressed: controller.print, child: Text("Print"),)))
+           Expanded(child: Center(child: MaterialButton(onPressed: (){controller.print(Name ,Date, bill_total);}, child: Text("Print"),)))
          ],
 
        );

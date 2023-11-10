@@ -16,6 +16,7 @@ class SellingInterface extends StatelessWidget {
         ],
         builder: (context, child) {
           final controler = Provider.of<SellingPageControler>(context);
+          final theme= Provider.of<MyTheme>(context);
           FocusNode _focusNode = FocusNode();
           return Row(
             children: [
@@ -33,19 +34,22 @@ class SellingInterface extends StatelessWidget {
                               ConnectionState.waiting)
                             return CircularProgressIndicator();
                           if (snapshot.hasError) return Text("Error");
-                          if (snapshot.data!.isEmpty) return Text("Epmty");
-                          return ListView.builder(
-                              itemCount: snapshot.data?.length,
-                              itemBuilder: (context, index) {
-                                return ListTile(
-                                  title: Text(snapshot.data![index].toString()),
-                                  onTap: () {
-                                    controler.searched_Category =
-                                        snapshot.data![index].toString();
-                                    controler.notifyListeners();
-                                  },
-                                );
-                              });
+                          if (snapshot.data!.isEmpty) return Center(child: Text("Epmty",style: theme.labelMedium,textAlign: TextAlign.center,),);
+                          else return Container(
+                            color: theme.secondaryBackground,
+                            child: ListView.builder(
+                                itemCount: snapshot.data?.length,
+                                itemBuilder: (context, index) {
+                                  return ListTile(
+                                    title: Text(snapshot.data![index].toString(),style: theme.labelMedium,textAlign: TextAlign.center,),
+                                    onTap: () {
+                                      controler.searched_Category =
+                                          snapshot.data![index].toString();
+                                      controler.notifyListeners();
+                                    },
+                                  );
+                                }),
+                          );
                         },
                       )),
                       //browser

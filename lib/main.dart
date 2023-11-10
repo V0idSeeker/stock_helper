@@ -67,8 +67,8 @@ class LogIn extends StatelessWidget {
                                 children: [
                                   TextFormField(
                                     initialValue: controler.username,
+                                    textAlign: TextAlign.center,
                                     decoration: InputDecoration(
-
                                       hintText: 'Username',
                                     ),
                                     onChanged: (value) {
@@ -84,6 +84,7 @@ class LogIn extends StatelessWidget {
                                     },
                                   ),
                                   TextFormField(
+                                    textAlign: TextAlign.center,
                                     obscureText: true,
                                     initialValue: controler.password,
                                     onChanged: (value) {
@@ -115,11 +116,13 @@ class LogIn extends StatelessWidget {
                                       } else
                                         return null;
                                     },
-                                    child: Text("go"),
+                                    child: Text("go",
+                                      textAlign: TextAlign.center,
+                                      style: theme.Buttons,
+                                    ),
                                   ),
                                   Exp_Counter(),
                                   if(controler.number_of_days<0) Activator_input()
-
                                 ],
                               ),
                             ),

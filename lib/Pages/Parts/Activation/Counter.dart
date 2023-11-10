@@ -24,7 +24,7 @@ class Exp_Counter extends StatelessWidget {
               if(snapshot.connectionState==ConnectionState.waiting) return CircularProgressIndicator();
               if(snapshot.hasError)return Text("Error");
               if(controler.is_active) return Container();
-              return Text("Time Left: ${controler.number_of_days} days");
+              return Padding( padding:  EdgeInsets.fromLTRB(20, 5, 20, 5),child: Text("Time Left: ${controler.number_of_days} days"));
 
 
 

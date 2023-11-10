@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:stock_helper/Providers/Global_Controllers/MyTheme.dart';
 import 'package:stock_helper/Providers/Pages_Controllers/InterfaceControler.dart';
 import 'package:stock_helper/main.dart';
 class MainPage extends StatelessWidget {
@@ -13,6 +14,7 @@ class MainPage extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (context) => InterfaceControler()),
+        ChangeNotifierProvider(create: (create)=>MyTheme())
       ],
       builder: (context, child) {
         return MaterialApp(
@@ -29,9 +31,10 @@ class MainInterface extends StatelessWidget {
   Widget build(BuildContext context) {
 
     final provider = Provider.of<InterfaceControler>(context);
+    final theme= Provider.of<MyTheme>(context);
     return Scaffold(
       appBar: AppBar(
-        title: Center(child: Text("Store Helper")),
+        title: Center(child: Text("Store Helper" ,style: theme.Headliers ,)),
       ),
 
       body: Row(
@@ -43,6 +46,7 @@ class MainInterface extends StatelessWidget {
 
               children: [
                 ListTile(
+
                   title: Icon(Icons.store),
                   onTap: () {
                     provider.ChangeMain("Selling");

@@ -86,6 +86,7 @@ class ClientBrows extends StatelessWidget {
                     mainAxisSize: MainAxisSize.max,
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
+
                       Expanded(
                         child: Padding(
                           padding:
