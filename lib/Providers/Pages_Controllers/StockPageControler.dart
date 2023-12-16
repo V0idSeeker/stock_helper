@@ -10,7 +10,12 @@ class StockPageControler extends ChangeNotifier{
   String mode="Add";
   Product p=new Product(0, "",-1, "", "count", 0,0, 0);
   Database_Maneger database=Database_Maneger();
+  bool paied=true;
 
+  void changePaiedStatus(bool v){
+    paied=v;
+    notifyListeners();
+  }
   Future<List<List>> GetSuppliers_Ids()async{
   List<Map<String, Object?>>?f=await  database.Suppliers_Ids();
   List<List> result=[];
@@ -46,7 +51,8 @@ Widget refresh(){
     }, child: Text("clear"));
 }
 Future<void> Add() async {
-
+  if(!paied)
+    await database.addSuppllierBalence(p.Supplier_Id, p.Product_Id,p.Product_amount,p.Product_Buying_Price , false);
 
  await database.AddProduct(p);
  p=new Product(0, "", -1,"", "count", 0,0, 0);
@@ -54,10 +60,16 @@ Future<void> Add() async {
 }
 
   Future<void> Edit() async{
+
+    if(!paied) {
+
+      await database.addSuppllierBalence(p.Supplier_Id, p.Product_Id,p.Product_amount,p.Product_Buying_Price , true);
+    }
     await database.EditProduct(p);
-    p=new Product(0, "", -1,"", "count", 0,0, 0);
-    mode="Add";
-    notifyListeners();
+      p=new Product(0, "", -1,"", "count", 0,0, 0);
+      mode="Add";
+      notifyListeners();
+
 
   }
 

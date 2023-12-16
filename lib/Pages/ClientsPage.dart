@@ -12,6 +12,7 @@ class ClientPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
+
     return MultiProvider(
         providers: [
           ChangeNotifierProvider(create: (create)=>MyTheme()),
@@ -32,13 +33,10 @@ class ClientPage extends StatelessWidget {
                   children: [
                     Expanded(
                       flex: 9,
-                      child: Align(
-                        alignment: AlignmentDirectional(0.00, 0.00),
-                        child: Text(
-                            'Clients',
-                            textAlign: TextAlign.center,
-                            style: Provider.of<MyTheme>(context).bodyMedium
-                        ),
+                      child: Text(
+                          'Clients',
+                          textAlign: TextAlign.center,
+                          style: Provider.of<MyTheme>(context).bodyMedium
                       ),
                     ),
                     Exp_Counter(),

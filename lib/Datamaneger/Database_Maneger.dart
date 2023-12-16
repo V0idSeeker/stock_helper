@@ -3,6 +3,7 @@
 
 import 'dart:math';
 
+import 'package:flutter/foundation.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 import 'package:stock_helper/Objects/Bill_Element.dart';
@@ -19,8 +20,6 @@ class Database_Maneger{
 
 
   Future<Database?> get database async {
-
-
     if (_database == null) {
      print("dfdfffffffffff");
       _database = await initDB();
@@ -112,7 +111,7 @@ class Database_Maneger{
             
             """);
           // Adjust the range as needed
-          String uniqueId = '${DateTime.now().millisecondsSinceEpoch}${Random().nextInt(999999)}';
+          String uniqueId =  '${DateTime.now().millisecondsSinceEpoch}${Random().nextInt(999999)}';
           String privatekey = '${DateTime.now().millisecondsSinceEpoch}${Random().nextInt(999999)}';
             await db.rawInsert("insert into 'Client' (Client_Id,Client_Name,Client_PN,Client_Balence)values(-1,'No Client',0,0)");
 
@@ -122,16 +121,8 @@ class Database_Maneger{
   }
 
  //product functions
- Future<void> AddProduct(Product p) async {
-    await database;
-    p=Product.formated(p);
-   await _database?.rawInsert("""insert into Product (Product_name,Supplier_Id,Category,Product_amount,Product_Type,Product_Buying_Price,Product_Selling_Price)
-    Values('${p.Product_Name}','${p.Supplier_Id}','${p.Category}','${p.Product_amount}','${p.Product_Type}','${p.Product_Buying_Price}','${p.Product_Selling_Price}');
-    """);
-   print(" Product saved");
-  }
 
-  Future<List<Product>> Productslist(String filter,String value)async{
+ Future<List<Product>> Productslist(String filter,String value)async{
    await database;
    List<Map<String, Object?>>? result;
    if(filter=="" ||value =="")
@@ -145,6 +136,28 @@ class Database_Maneger{
    return results;
 
  }
+
+ Future<void> AddProduct(Product p) async {
+    await database;
+    p=Product.formated(p);
+    Product db_product=p;
+    List<Product> products= await Productslist("", "");
+    products.forEach((element) {if(element.Product_Name==p.Product_Name) db_product=element ;  });
+    if(db_product!=p )
+      await _database?.rawUpdate("""
+        Uppdate Product Set  Supplier_Id='${p.Supplier_Id}' ,Product_amount= '${p.Product_amount+db_product.Product_amount}' ,
+        Product_Buying_Price= '${p.Product_Buying_Price}' ,Product_Selling_Price='${p.Product_Selling_Price}'
+     where Product_Id= '${p.Product_Id}';
+         """);
+
+    else
+      await _database?.rawInsert("""insert into Product (Product_name,Supplier_Id,Category,Product_amount,Product_Type,Product_Buying_Price,Product_Selling_Price)
+    Values('${p.Product_Name}','${p.Supplier_Id}','${p.Category}','${p.Product_amount}','${p.Product_Type}','${p.Product_Buying_Price}','${p.Product_Selling_Price}');
+    """);
+   print(" Product saved");
+  }
+
+
 
  Future<List> Categories()async{
     await database;
@@ -192,15 +205,12 @@ class Database_Maneger{
 
  Future<List<Client>> Clientslist(String filter,String value)async{
    await database;
-   List<Map<String, Object?>>? result;
-   if(filter=="" ||value =="")
-     result=await _database?.rawQuery('SELECT * from Client ORDER BY Client_Name');
-   else  result=await _database?.rawQuery('SELECT * from Client where ${filter} LIKE "%${value}%" ORDER BY Client_Name');
-   List<Client> results=[];
-   for(Map<String,Object?> m in result!){
-     results.add(Client.fromMap(m));
 
-   }
+   List<Client> results=[];
+   if(filter=="" ||value =="")
+     await _database?.rawQuery('SELECT * from Client ORDER BY Client_Name ').then((value) =>  value.forEach((element) { results.add(Client.fromMap(element)); }));
+   else await _database?.rawQuery('SELECT * from Client where ${filter} LIKE "%${value}%" ORDER BY Client_Name').then((value) =>  value.forEach((element) { results.add(Client.fromMap(element)); }));
+
    return results;
 
  }
@@ -256,6 +266,24 @@ class Database_Maneger{
    print("Supplier saved");
  }
 
+  Future<void> addSuppllierBalence(int supplierId , int productId , double productAmount, double productBuyingPrice , bool isedit)async {
+    if(!isedit) {
+      await _database?.rawUpdate(
+          "Update Supplier Set Supplier_Balence=Supplier_Balence+${productAmount *
+              productBuyingPrice} where Supplier_Id=${supplierId} ; ");
+    return ;
+    }
+
+
+        List<Map<String, Object?>>? product=await _database?.rawQuery("Select Product_amount from Product where Product_Id=${productId} ;");
+        productAmount=productAmount-double.parse(product![0]["Product_amount"].toString());
+        print("new amount ="+productAmount.toString());
+    await _database?.rawUpdate(
+        "Update Supplier Set Supplier_Balence=Supplier_Balence+${productAmount *
+            productBuyingPrice} where Supplier_Id=${supplierId} ; ");
+
+
+  }
  Future<void> DeleteSupplier(Supplier c)async{
    await database;
    await _database?.rawDelete("Delete from Supplier where Supplier_Id= '${c.Supplier_Id}' ;");
@@ -275,7 +303,7 @@ Future<List<Map<String, Object?>>?> GetProductName(int Id) async {
     return await _database?.rawQuery("Select Product_Name from Product where Product_Id='${Id}' Order By Product_Name");
 
 }
-Future<void> AddBill(int owner_id,String owner_type,List<Bill_Element> elements ,bool Payed_Now)async{
+Future<int?> AddBill(int owner_id,String owner_type,List<Bill_Element> elements ,bool Payed_Now)async{
     double total_value=0;
     elements.forEach((element) {total_value=total_value+(element.Bill_Element_Price*element.Element_amount); });
     int? bill_id=await _database?.rawInsert("insert into 'Bill'(Owner_Id,Owner_Type,Bill_Total,Bill_date) Values ('${owner_id}','${owner_type}',${total_value},'${DateTime.now()}')");
@@ -288,6 +316,7 @@ Future<void> AddBill(int owner_id,String owner_type,List<Bill_Element> elements 
     });
     await _database?.rawInsert("insert into Bill_Element VALUES ${inserter} ");
     if(!Payed_Now && owner_type=="Client") await _database?.rawUpdate("UPDATE Client SET Client_Balence = Client_Balence - ${total_value} WHERE Client_Id = '${owner_id}' ");
+    return bill_id;
 
 }
 
@@ -332,7 +361,7 @@ Future<List<Map<String,Object?>>?>GetBillElements(String Bill_Id)async{
 Future<Map<String,Object?>?>? GetSettingsParams()async{
     await database;
     List<Map<String, Object?>>? f=await _database?.rawQuery("SELECT * FROM Settings ");
-    print(f.toString());
+    
     return f?.first;
 }
 

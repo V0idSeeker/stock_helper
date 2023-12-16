@@ -28,6 +28,8 @@ class Client {
     this.Client_PN = int.parse(map["Client_PN"].toString());
     this.Client_Balence = double.parse(map["Client_Balence"].toString());
   }
+
+
   Client.formated(Client c)
   {
     this.Client_Id = c.Client_Id;

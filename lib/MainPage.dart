@@ -36,65 +36,57 @@ class MainInterface extends StatelessWidget {
       appBar: AppBar(
         title: Center(child: Text("Store Helper" ,style: theme.Headliers ,)),
       ),
+    
+      drawer: Drawer(
+        width: MediaQuery.of(context).size.width/11,
+        child:  ListView(
+          children: [
+            ListTile(
 
-      body: Row(
-        children: [
-          Flexible(
-            fit: FlexFit.loose,
-
-            child: ListView(
-
-              children: [
-                ListTile(
-
-                  title: Icon(Icons.store),
-                  onTap: () {
-                    provider.ChangeMain("Selling");
-                  },
-                ),
-                ListTile(
-                  title: Icon(Icons.storage),
-                  onTap: () {provider.ChangeMain("Stock");},
-                ),
-                ListTile(
-                  title: Icon(Icons.person),
-                  onTap: () {
-                    provider.ChangeMain("Clients");
-                  },
-                ),
-                ListTile(
-                  title: Icon(Icons.fire_truck),
-                  onTap: () {provider.ChangeMain("Supplier");},
-                ),
-                ListTile(
-                  title: Icon(Icons.history),
-                  onTap: () {provider.ChangeMain("History");},
-                ),
-                ListTile(
-                  title: Icon(Icons.settings),
-                  onTap: () {provider.ChangeMain("Settings");},
-                ),
-                ListTile(
-                  title: Icon(Icons.logout),
-                  onTap: (){provider.logout();
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => LogIn()),
-                  );
-                  ;},
-                )
-
-              ],
+              title: Icon(Icons.store),
+              onTap: () {
+                provider.ChangeMain("Selling");
+              },
             ),
-          ),
-          Expanded(
-            flex: 13,
+            ListTile(
+              title: Icon(Icons.storage),
+              onTap: () {provider.ChangeMain("Stock");},
+            ),
+            ListTile(
+              title: Icon(Icons.person),
+              onTap: () {
+                provider.ChangeMain("Clients");
+              },
+            ),
+            ListTile(
+              title: Icon(Icons.fire_truck),
+              onTap: () {provider.ChangeMain("Supplier");},
+            ),
+            ListTile(
+              title: Icon(Icons.history),
+              onTap: () {provider.ChangeMain("History");},
+            ),
+            ListTile(
+              title: Icon(Icons.settings),
+              onTap: () {provider.ChangeMain("Settings");},
+            ),
+            ListTile(
+              title: Icon(Icons.logout),
+              onTap: (){provider.logout();
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => LogIn()),
+              );
+              ;},
+            )
 
-            child:  provider.main_screan
-
-          ),
-        ],
+          ],
+        ),
       ),
+
+      body:
+          provider.main_screan,
+
     );
   }
 }

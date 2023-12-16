@@ -27,12 +27,13 @@ class DisplayBill extends StatelessWidget {
              ],
            ),
            Expanded(
+             flex: 5,
              child: FutureBuilder(future:controller.getBillinfo(Bill_Id), builder: (context,snapshot){
                if(snapshot.connectionState==ConnectionState.waiting) return CircularProgressIndicator();
                if(snapshot.hasError )return Text("Error");
 
-                 return ListView.builder(
-               itemCount: snapshot.data?.length,
+                 return ListView.separated(
+               itemCount: snapshot.data!.length,
                    itemBuilder: (context,index){
                   Map f=snapshot.data![index];
                   return ListTile(
@@ -40,19 +41,22 @@ class DisplayBill extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Expanded(child: Text(f["Product_Name"],textAlign: TextAlign.center)),
+                        Container( alignment: Alignment.center,child: VerticalDivider(color: Colors.grey, thickness: 1.0 , ) , height: 20,),
                         Expanded(child: Text(f["Element_amount"].toString(),textAlign: TextAlign.center)),
+                        Container( alignment: Alignment.center,child: VerticalDivider(color: Colors.grey, thickness: 1.0 , ) , height: 20,),
                         Expanded(child: Text(f["Bill_Element_Price"].toString(),textAlign: TextAlign.center)),
 
                     ],
                     ),
                   );
 
-                   }
+                   }, separatorBuilder: (BuildContext context, int index) =>Divider(),
 
                );
 
              }),
            ),
+           Divider(),
            Expanded(child: Text( "Total : "+bill_total,style: TextStyle(fontSize: 18),textAlign: TextAlign.center,)),
            Expanded(child: Center(child: MaterialButton(onPressed: (){controller.print(Name ,Date, bill_total);}, child: Text("Print"),)))
          ],

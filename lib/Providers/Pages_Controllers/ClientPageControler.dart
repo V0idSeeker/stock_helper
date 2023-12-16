@@ -9,7 +9,7 @@ class ClientPageControler extends ChangeNotifier {
   String searchparamm="";
   Client c=new Client(0,"",00000000,0);
   String mode="Add";
-
+ List<Client> clients= [] ;
   void Searcher(){
     if(!searchBar.text.isEmpty)
       searchparamm=searchBar.text;
@@ -22,10 +22,17 @@ class ClientPageControler extends ChangeNotifier {
 
   }
   Future<List<Client>> clientlist() async {
-    if(searchType=="Name")return await database.Clientslist("Client_Name",searchparamm);
-    if(searchType=="Phone Number")return await database.Clientslist("Client_PN",searchparamm);
-    return await database.Clientslist(searchType, searchparamm);
+
+    if(searchType=="Name") {
+      clients = await database.Clientslist("Client_Name", searchparamm);
+    } else if(searchType=="Phone Number") {
+      clients = await database.Clientslist("Client_PN", searchparamm);
+    }else
+          clients =  await database.Clientslist(searchType, searchparamm);
+
+    return clients;
   }
+
   Future<void> Add() async {
     await database.AddClient(c);
     c=new Client(0,"",00000000,0);

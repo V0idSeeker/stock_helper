@@ -41,6 +41,7 @@ class LogIn extends StatelessWidget {
 
         final formKey = GlobalKey<FormState>();
         return MaterialApp(
+
           home: FutureBuilder(
               future: controler.getstats(),
               builder: (context, snapshot) {

@@ -9,6 +9,7 @@ class SupplierPageControler extends ChangeNotifier {
   String searchparamm="";
   Supplier c=new Supplier(0,"",00000000,0);
   String mode="Add";
+  List<Supplier> suppliers =[];
 
   void Searcher(){
     if(!searchBar.text.isEmpty)
@@ -22,9 +23,10 @@ class SupplierPageControler extends ChangeNotifier {
 
   }
   Future<List<Supplier>> Supplierlist() async {
-    if(searchType=="Name")return await database.Supplierslist("Supplier_Name",searchparamm);
-    if(searchType=="Phone Number")return await database.Supplierslist("Supplier_PN",searchparamm);
-    return await database.Supplierslist(searchType, searchparamm);
+    if(searchType=="Name")suppliers= await database.Supplierslist("Supplier_Name",searchparamm);
+    else if(searchType=="Phone Number")suppliers= await database.Supplierslist("Supplier_PN",searchparamm);
+    else suppliers= await database.Supplierslist(searchType, searchparamm);
+  return suppliers;
   }
   Future<void> Add() async {
     await database.AddSupplier(c);
